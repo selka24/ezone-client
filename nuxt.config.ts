@@ -1,8 +1,29 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+import type { NuxtPage} from 'nuxt/schema';
+
 export default defineNuxtConfig({
     devtools: { enabled: true },
     typescript: {
         typeCheck: true
+    },
+    hooks: {
+        'pages:extend' (pages) {
+            function setMiddleware (pages: NuxtPage[]) {
+                for (const page of pages) {
+                    console.log(page)
+                    if (/* some condition */ true) {
+                        page.meta ||= {}
+                        // Note that this will override any middleware set in `definePageMeta` in the page
+                        page.meta.middleware = ['named']
+                    }
+                    if (page.children) {
+                        console.log(page.children)
+                        setMiddleware(page.children)
+                    }
+                }
+            }
+            setMiddleware(pages)
+        }
     },
     css: ['~/assets/css/main.css'],
     runtimeConfig: {
