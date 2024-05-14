@@ -17,6 +17,7 @@ export default defineNuxtConfig({
         '@nuxtjs/tailwindcss',
         '@formkit/nuxt',
         '@vee-validate/nuxt',
+        '@pinia/nuxt'
     ],
     veeValidate: {
         // disable or enable auto imports

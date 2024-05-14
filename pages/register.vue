@@ -1,49 +1,31 @@
 <script setup lang="ts">
-import { useForm } from 'vee-validate';
-import * as yup from 'yup';
+import RegisterForm from "~/components/auth/RegisterForm.vue";
 
-const { errors, handleSubmit, defineField } = useForm({
-    validationSchema: yup.object({
-        email: yup.string().email().required(),
-        password: yup.string().min(6).required(),
-    }),
-});
+const authStore = useAuthStore();
 
-// Creates a submission handler
-// It validate all fields and doesn't call your function unless all fields are valid
-const onSubmit = handleSubmit(values => {
-    console.log(values, 'valuees')
-    useAPI('/login', {
-        method: 'POST',
-        body: values
-    })
-});
-
-const [email, emailAttrs] = defineField('email');
-const [password, passwordAttrs] = defineField('password');
 </script>
 
 <template>
-    <form @submit="onSubmit" class="max-w-sm">
-        <label class="form-control w-full">
-            <div class="label">
-                <span class="label-text">Your Email</span>
+    <div class="hero min-h-screen bg-base-200">
+        <div class="hero-content flex-col lg:flex-row-reverse">
+            <div class="text-center lg:text-left">
+                <h1 class="text-5xl font-bold">{{ authStore.authLoading ?  'Duke u regjistruar' : 'Regjistrohu!' }}</h1>
+                <p class="py-6 max-w-2xl">Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.</p>
+                <div class="flex justify-center" v-if="authStore.authLoading">
+                    <span class="loading loading-bars loading-lg"></span>
+                </div>
             </div>
-            <input type="email" v-model="email" v-bind="emailAttrs" class="input input-bordered"/>
-            <div class="label">
-                <span class="label-text-alt text-error">{{ errors.email }}</span>
+            <div class="card shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
+                <RegisterForm/>
             </div>
-        </label>
-        <label class="form-control w-full">
-            <div class="label">
-                <span class="label-text">Password</span>
+        </div>
+        <div class="toast toast-top toast-end">
+            <div class="alert alert-info">
+                <span>New mail arrived.</span>
             </div>
-            <input type="password" v-model="password" v-bind="passwordAttrs" class="input input-bordered"/>
-            <div class="label">
-                <span class="label-text-alt text-error">{{ errors.password }}</span>
+            <div class="alert alert-success">
+                <span>Message sent successfully.</span>
             </div>
-        </label>
-
-        <button class="btn btn-primary">Submit</button>
-    </form>
+        </div>
+    </div>
 </template>
