@@ -4,10 +4,28 @@ export const useCompanyStore = defineStore('companyStore', () => {
 
     //state
     const company = ref(null);
+    const creatingCompany = ref(false);
 
+    //actions
+    const actCreateCompany = async (companyInfo: Company) => {
+        const {data, error, pending} = await useAPI('/profile/create', {
+            method: 'POST',
+            body: companyInfo
+        })
+        creatingCompany.value = pending.value;
+
+        console.log(data.value, 'created company');
+        if(data.value) {
+
+        } else {
+
+        }
+    }
 
     return {
-        company
+        company,
+        creatingCompany,
+        actCreateCompany
     }
 })
 

@@ -2,11 +2,13 @@ import {defineStore, acceptHMRUpdate} from 'pinia';
 
 export const useAuthStore =     defineStore('authStore', () => {
     const router = useRouter();
+    const {parseJwt} = useUtils();
+
 
     //state
     const authUser = ref<AuthUser | null>(null);
     const authLoading = ref<boolean>(false);
-    const authenticated = ref<boolean>(false);
+    const authenticated = ref<string>('');
 
     //actions
     const registerUser = async (userInfo: AuthRegister) => {
@@ -37,11 +39,11 @@ export const useAuthStore =     defineStore('authStore', () => {
         console.log('pending', pending.value)
         authLoading.value = pending.value;
         if(data.value){
-            console.log(data.value, 'dataaaa')
             const token = useCookie('token');
-            authUser.value = data.value;
-            authenticated.value = true;
             token.value = data.value.token;
+            authUser.value = data.value;
+            authenticated.value = parseJwt(token.value)._id;
+
             await router.push('/admin')
         }
     }

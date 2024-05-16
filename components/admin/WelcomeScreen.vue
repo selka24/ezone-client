@@ -14,7 +14,7 @@
                 <h1 class="text-5xl font-bold">Hello!</h1>
                 <h3>Welcome to E ZON! Thank you for joining us, into making your business greater!</h3>
                 <div class="flex items-center mt-5 gap-3">
-                    <button class="btn btn-primary">Get Started</button>
+                    <nuxt-link to="/admin/create" class="btn btn-primary">Get Started</nuxt-link>
                     <h3 class="m-0">and create your company</h3>
                 </div>
             </div>

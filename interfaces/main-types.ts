@@ -23,10 +23,10 @@ export interface AuthUser {
 
 export interface Company {
     user: string
-    image: string
+    image?: string
     description: string
     name: string
-    employees: any[]
+    employees?: any[]
     show_price: boolean
     location: string
 }

@@ -14,7 +14,7 @@ const { errors, handleSubmit, defineField } = useForm<AuthRegister>({
 // It validate all fields and doesn't call your function unless all fields are valid
 const onSubmit = handleSubmit(values => {
     console.log(values)
-    // authStore.registerUser(values)
+    authStore.registerUser(values)
 });
 
 // const [email] = defineField('email');
@@ -47,6 +47,5 @@ const roleOptions: string[] = [
         <button :disabled="authStore.authLoading" class="btn btn-primary">Register</button>
 
         <div>Already have an account? <nuxt-link to="/login" class="link link-primary">Login</nuxt-link></div>
-
     </form>
 </template>
