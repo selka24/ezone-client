@@ -1,7 +1,8 @@
 import {defineStore, acceptHMRUpdate} from 'pinia';
-import type {AuthLogin, AuthUser} from "~/interfaces/main-types";
 
 export const useAuthStore =     defineStore('authStore', () => {
+    const router = useRouter();
+
     //state
     const authUser = ref<AuthUser | null>(null);
     const authLoading = ref<boolean>(false);
@@ -9,36 +10,39 @@ export const useAuthStore =     defineStore('authStore', () => {
 
     //actions
     const registerUser = async (userInfo: AuthRegister) => {
-        // authLoading.value = true;
-        const {data, error, pending} = await useAPI<AuthUser>('/register', {
+        authLoading.value = true;
+        const {data, error} = await useAPI<AuthUser>('/register', {
             method: 'POST',
             body: userInfo
         })
-        authLoading.value = pending.value
-        //setTimeout(() => {
-        //     authLoading.value = false;
-        // }, 800)
         console.log(error.value?.data, 'error', data.value);
-        if(data.value){
-            const token = useCookie('token');
-            authUser.value = data.value;
-            token.value = data.value.token;
+        if(!error.value){
+            await authenticateUser({
+                email: userInfo.email,
+                password: userInfo.password
+            })
+        } else {
+            authLoading.value = false
         }
     }
 
     const authenticateUser = async ({email, password}: AuthLogin) => {
-        const {data, pending} = useFetch<AuthUser>('/login', {
+        const {data, pending} = await useAPI<AuthUser>('/login', {
             method: 'POST',
             body: {
                 email,
                 password
             }
         })
+        console.log('pending', pending.value)
         authLoading.value = pending.value;
         if(data.value){
+            console.log(data.value, 'dataaaa')
             const token = useCookie('token');
             authUser.value = data.value;
+            authenticated.value = true;
             token.value = data.value.token;
+            await router.push('/admin')
         }
     }
 

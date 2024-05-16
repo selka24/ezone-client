@@ -1,18 +1,16 @@
-import {date} from "yup"
-
-export type AuthLogin = {
+export interface AuthLogin {
     email: string
     password: string
 }
 
-export type AuthRegister = {
+export interface AuthRegister {
     email: string
     password: string
     username: string
     role: string
 }
 
-export type AuthUser = {
+export interface AuthUser {
     _id: string
     username: string
     email: string
@@ -21,4 +19,14 @@ export type AuthUser = {
     updatedAt: Date
     __v: number
     token: string
+}
+
+export interface Company {
+    user: string
+    image: string
+    description: string
+    name: string
+    employees: any[]
+    show_price: boolean
+    location: string
 }

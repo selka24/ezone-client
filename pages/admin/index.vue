@@ -1,10 +1,11 @@
 <script setup lang="ts">
-
+import WelcomeScreen from "~/components/admin/WelcomeScreen.vue";
+const companyStore = useCompanyStore();
 </script>
 
 <template>
     <div>
-        ADMIN
+        <WelcomeScreen v-if="!companyStore.company"/>
     </div>
 </template>
 

@@ -10,14 +10,12 @@ export default defineNuxtConfig({
         'pages:extend' (pages) {
             function setMiddleware (pages: NuxtPage[]) {
                 for (const page of pages) {
-                    console.log(page)
-                    if (/* some condition */ true) {
+                    if (page.path.includes('admin')) {
                         page.meta ||= {}
                         // Note that this will override any middleware set in `definePageMeta` in the page
-                        page.meta.middleware = ['named']
+                        page.meta.middleware = ['auth']
                     }
                     if (page.children) {
-                        console.log(page.children)
                         setMiddleware(page.children)
                     }
                 }
