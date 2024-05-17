@@ -8,18 +8,18 @@ export const useCompanyStore = defineStore('companyStore', () => {
 
     //actions
     const actCreateCompany = async (companyInfo: Company) => {
-        const {data, error, pending} = await useAPI('/profile/create', {
-            method: 'POST',
-            body: companyInfo
-        })
-        creatingCompany.value = pending.value;
-
-        console.log(data.value, 'created company');
-        if(data.value) {
-
-        } else {
-
-        }
+        // const {data, error, pending} = await useApi('/profile/create', {
+        //     method: 'POST',
+        //     body: companyInfo
+        // })
+        // creatingCompany.value = pending.value;
+        //
+        // console.log(data.value, 'created company');
+        // if(data.value) {
+        //
+        // } else {
+        //
+        // }
     }
 
     return {

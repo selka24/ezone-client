@@ -1,9 +1,11 @@
-import {defineStore, acceptHMRUpdate} from 'pinia';
+import {acceptHMRUpdate, defineStore} from 'pinia';
+import type {AuthUser} from "~/interfaces/main-types";
 
 export const useAuthStore =     defineStore('authStore', () => {
     const router = useRouter();
     const {parseJwt} = useUtils();
-    const { $toast: toast } = useNuxtApp()
+    const { $toast, $api } = useNuxtApp()
+
     //state
     const authUser = ref<AuthUser | null>(null);
     const authLoading = ref<boolean>(false);
@@ -12,28 +14,29 @@ export const useAuthStore =     defineStore('authStore', () => {
     //actions
     const registerUser = async (userInfo: AuthRegister) => {
         authLoading.value = true;
-        const {data, error} = await useAPI<AuthUser>('/register', {
-            method: 'POST',
-            body: userInfo
-        })
-        console.log(error.value?.data, 'error', data.value);
-        if(!error.value){
+        try {
+            authUser.value = await $api<AuthUser>('/register', {
+                method: 'POST',
+                body: userInfo,
+            })
+
             await authenticateUser({
                 email: userInfo.email,
                 password: userInfo.password
             })
-        } else {
-            authLoading.value = false
+        } catch (e) {
+
+        } finally {
+            authLoading.value = false;
         }
     }
 
     const authenticateUser = async ({email, password}: AuthLogin) => {
-        const {data, error, pending} = await useAPI<AuthUser>('/login', {
+        const {data, error, pending} = await useApi<AuthUser>('/login', {
             method: 'POST',
-            body: {
-                email,
-                password
-            }
+            body: { email, password },
+            //@ts-ignore
+            default: {}
         })
         console.log('pending', pending.value)
         authLoading.value = pending.value;
@@ -46,8 +49,8 @@ export const useAuthStore =     defineStore('authStore', () => {
             await router.push('/admin')
         } else {
             if(error.value){
-                console.log()
-                toast.error(error.value.data)
+                // $toast.clear();
+                // $toast.error(error.value.data)
             }
         }
     }
