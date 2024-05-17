@@ -6,7 +6,6 @@
   </div>
 </template>
 <script setup lang="ts">
-import "vue-toastification/dist/index.css";
 </script>
 <style>
 .page-enter-active,

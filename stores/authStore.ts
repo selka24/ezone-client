@@ -1,11 +1,9 @@
 import {defineStore, acceptHMRUpdate} from 'pinia';
-import { useToast } from "vue-toastification";
 
 export const useAuthStore =     defineStore('authStore', () => {
     const router = useRouter();
     const {parseJwt} = useUtils();
-    const toast = useToast();
-
+    const { $toast: toast } = useNuxtApp()
     //state
     const authUser = ref<AuthUser | null>(null);
     const authLoading = ref<boolean>(false);

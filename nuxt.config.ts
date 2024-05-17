@@ -11,10 +11,10 @@ export default defineNuxtConfig({
             function setMiddleware (pages: NuxtPage[]) {
                 for (const page of pages) {
                     if (page.path.includes('admin')) {
-                        page.meta ||= {}
+                        page.meta ||= {};
                         // Note that this will override any middleware set in `definePageMeta` in the page
                         // page.meta.middleware = ['auth']
-                        page.meta.layout = 'authenticated'
+                        page.meta.layout = 'authenticated';
                     }
                     if (page.children) {
                         setMiddleware(page.children)
