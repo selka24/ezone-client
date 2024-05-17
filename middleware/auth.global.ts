@@ -4,6 +4,8 @@ export default defineNuxtRouteMiddleware((to) => {
     const token = useCookie('token'); // get token from cookies
     const {parseJwt} = useUtils();
 
+    const noAuthPage = to?.name === 'login' || to?.name === 'register' || to?.path === '/';
+
     if (token.value) {
         // check if value exists
         // console.log(token.value)
@@ -12,12 +14,12 @@ export default defineNuxtRouteMiddleware((to) => {
     }
 
     // if token exists and url is /login redirect to homepage
-    if (token.value && to?.name === 'login') {
-        return navigateTo('/');
+    if (token.value && noAuthPage) {
+        return navigateTo('/admin');
     }
 
     // if token doesn't exist redirect to log in
-    if (!token.value && to?.name !== 'login') {
+    if (!token.value && !noAuthPage) {
         abortNavigation();
         return navigateTo('/login');
     }

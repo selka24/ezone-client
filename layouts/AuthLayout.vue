@@ -4,9 +4,9 @@ const route = useRoute();
 
 const loadingMessage = computed(() => {
     if (route.path === '/register'){
-        return {loading: 'Duke u regjistruar', steady: 'Regjistrohu'}
+        return {loading: 'Registering', steady: 'Register'}
     }
-    return {loading: 'Duke u loguar', steady: 'Logohu'}
+    return {loading: 'Logging in', steady: 'Login'}
 })
 
 </script>

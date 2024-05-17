@@ -13,7 +13,8 @@ export default defineNuxtConfig({
                     if (page.path.includes('admin')) {
                         page.meta ||= {}
                         // Note that this will override any middleware set in `definePageMeta` in the page
-                        page.meta.middleware = ['auth']
+                        // page.meta.middleware = ['auth']
+                        page.meta.layout = 'authenticated'
                     }
                     if (page.children) {
                         setMiddleware(page.children)
@@ -34,10 +35,16 @@ export default defineNuxtConfig({
     },
     modules: [
         '@nuxtjs/tailwindcss',
-        '@formkit/nuxt',
         '@vee-validate/nuxt',
-        '@pinia/nuxt'
+        '@pinia/nuxt',
+        '@vesp/nuxt-fontawesome',
     ],
+    fontawesome: {
+        component: 'fai',
+        icons: {
+            solid: ['right-from-bracket', 'house'],
+        }
+    },
     veeValidate: {
         // disable or enable auto imports
         autoImports: true,
@@ -49,8 +56,4 @@ export default defineNuxtConfig({
             ErrorMessage: 'VeeErrorMessage',
         },
     },
-    formkit: {
-        // Experimental support for auto loading (see note):
-        autoImport: true
-    }
 })

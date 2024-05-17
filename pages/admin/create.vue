@@ -18,7 +18,6 @@ const handleCreateCompany = handleSubmit((values) => {
 
 <template>
     <div class="card m-auto mt-20 shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
-        {{errors}}
         <form @submit.prevent="handleCreateCompany" class="card-body" novalidate>
             <h2 class="card-title">Create company</h2>
             <InputText name="name" />

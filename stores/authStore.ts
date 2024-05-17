@@ -1,9 +1,10 @@
 import {defineStore, acceptHMRUpdate} from 'pinia';
+import { useToast } from "vue-toastification";
 
 export const useAuthStore =     defineStore('authStore', () => {
     const router = useRouter();
     const {parseJwt} = useUtils();
-
+    const toast = useToast();
 
     //state
     const authUser = ref<AuthUser | null>(null);
@@ -29,7 +30,7 @@ export const useAuthStore =     defineStore('authStore', () => {
     }
 
     const authenticateUser = async ({email, password}: AuthLogin) => {
-        const {data, pending} = await useAPI<AuthUser>('/login', {
+        const {data, error, pending} = await useAPI<AuthUser>('/login', {
             method: 'POST',
             body: {
                 email,
@@ -45,7 +46,19 @@ export const useAuthStore =     defineStore('authStore', () => {
             authenticated.value = parseJwt(token.value)._id;
 
             await router.push('/admin')
+        } else {
+            if(error.value){
+                console.log()
+                toast.error(error.value.data)
+            }
         }
+    }
+
+    const actLogOut = () => {
+        const token = useCookie('token');
+        token.value = null;
+        authenticated.value = '';
+        router.push('/');
     }
 
     return {
@@ -53,6 +66,7 @@ export const useAuthStore =     defineStore('authStore', () => {
         authUser,
         authLoading,
         authenticateUser,
+        actLogOut,
         registerUser,
     }
 })
