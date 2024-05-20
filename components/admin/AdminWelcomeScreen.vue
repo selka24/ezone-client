@@ -3,10 +3,9 @@
 </script>
 
 <template>
-    <div class="border-4 rounded-md self-start mt-10 p-4 border-error">
+    <div class="border-4 max-w-max rounded-md mt-10 p-4 border-error">
         <h1 class="text-6xl font-bold">E ZON!!</h1>
     </div>
-
     <div class="hero-content flex-col lg:flex-row-reverse">
         <div class="prose">
             <h1 class="text-5xl font-bold">Hello!</h1>

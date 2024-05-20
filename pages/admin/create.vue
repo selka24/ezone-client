@@ -2,6 +2,7 @@
 import {companyValidationSchema} from '~/validations';
 import InputText from "~/components/inputs/InputText.vue";
 import InputCheckbox from "~/components/inputs/InputCheckbox.vue";
+import InputToggle from "~/components/inputs/InputToggle.vue";
 
 const authStore = useAuthStore();
 const companyStore = useCompanyStore();
@@ -17,14 +18,14 @@ const handleCreateCompany = handleSubmit((values) => {
 </script>
 
 <template>
-    <div class="card m-auto mt-20 shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
+    <div class="card mx-auto shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
         <form @submit.prevent="handleCreateCompany" class="card-body prose" novalidate>
             <h2 class="card-title">Create company</h2>
             <p>Shtoni te dhenat kryesore te kompanise</p>
             <InputText name="name" :attributes="{placeholder: 'Emri i biznesit tuaj'}"/>
             <InputText name="description" :attributes="{placeholder: 'Nje pershkrim i shkurter'}"/>
-            <InputCheckbox name="show_price" label="Show Price" />
-            <InputText name="location" />
+            <InputToggle name="show_price" label="Show Price" />
+            <InputText name="location" :attributes="{placeholder: 'Vendndodhja e biznesit'}"/>
             <button :disabled="companyStore.creatingCompany" class="btn btn-primary">
                 <span v-if="companyStore.creatingCompany" class="loading loading-bars loading-lg"></span>
                 <span v-else>

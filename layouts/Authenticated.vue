@@ -1,11 +1,15 @@
 <script setup lang="ts">
 const authStore = useAuthStore();
+const hasCompany = computed(() => {
+    return !!authStore.authUser?.companyProfileId
+})
+
 </script>
 
 <template>
     <div>
-        <AdminSidebar/>
-        <div class="flex flex-col items-center ml-48 pr-8 lg:pr-10">
+        <AdminSidebar v-if="hasCompany"/>
+        <div :class="['flex flex-col items-center pr-8 lg:pr-10', {'ml-48': hasCompany}]">
             <ul class="menu menu-horizontal ml-auto bg-base-200 rounded-box mt-5">
                 <li>
                     <nuxt-link to="/admin" class="tooltip" data-tip="Home">
@@ -23,7 +27,7 @@ const authStore = useAuthStore();
                     </a>
                 </li>
             </ul>
-            <div class="w-full mt-10">
+            <div class="w-full mt-5">
                 <slot />
             </div>
         </div>
