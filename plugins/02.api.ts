@@ -9,11 +9,11 @@ export default defineNuxtPlugin(() => {
             if (token.value) {
                 const headers = options.headers ||= {}
                 if (Array.isArray(headers)) {
-                    headers.push(['Authorization', `Bearer ${token.value}`])
+                    headers.push(['Authorization', `${token.value}`])
                 } else if (headers instanceof Headers) {
-                    headers.set('Authorization', `Bearer ${token.value}`)
+                    headers.set('Authorization', `${token.value}`)
                 } else {
-                    headers.Authorization = `Bearer ${token.value}`
+                    headers.Authorization = `${token.value}`
                 }
             }
         },
@@ -22,7 +22,7 @@ export default defineNuxtPlugin(() => {
                 await navigateTo('/login')
             } else {
                 // console.log( ,'daaaaaaaa')
-                $toast.error(response._data)
+                if(!process.server) $toast.error(response._data)
             }
         },
     })

@@ -1,16 +1,20 @@
+import type {AuthUser} from "~/interfaces/main-types";
+
 export default defineNuxtRouteMiddleware((to) => {
     const authStore = useAuthStore();
-    const { authenticated } = storeToRefs(authStore); // make authenticated state reactive
+    const { authenticated, authUser } = storeToRefs(authStore); // make authenticated state reactive
     const token = useCookie('token'); // get token from cookies
     const {parseJwt} = useUtils();
+    const user = useCookie<AuthUser | null>('user');
 
     const noAuthPage = to?.name === 'login' || to?.name === 'register' || to?.path === '/';
 
-    if (token.value) {
+    if (token.value && user.value) {
         // check if value exists
         // console.log(token.value)
         const {_id} = parseJwt(token.value)
         authenticated.value = _id; // update the state to authenticated
+        authUser.value = user.value;
     }
 
     // if token exists and url is /login redirect to homepage

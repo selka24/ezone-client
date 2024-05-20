@@ -1,5 +1,5 @@
+import type {AuthUser, AuthRegister, AuthLogin} from "~/interfaces/main-types";
 import {acceptHMRUpdate, defineStore} from 'pinia';
-import type {AuthUser} from "~/interfaces/main-types";
 
 export const useAuthStore =     defineStore('authStore', () => {
     const router = useRouter();
@@ -15,7 +15,7 @@ export const useAuthStore =     defineStore('authStore', () => {
     const registerUser = async (userInfo: AuthRegister) => {
         authLoading.value = true;
         try {
-            authUser.value = await $api<AuthUser>('/register', {
+            await $api('/register', {
                 method: 'POST',
                 body: userInfo,
             })
@@ -32,26 +32,27 @@ export const useAuthStore =     defineStore('authStore', () => {
     }
 
     const authenticateUser = async ({email, password}: AuthLogin) => {
-        const {data, error, pending} = await useApi<AuthUser>('/login', {
-            method: 'POST',
-            body: { email, password },
-            //@ts-ignore
-            default: {}
-        })
-        console.log('pending', pending.value)
-        authLoading.value = pending.value;
-        if(data.value){
+        try {
+            authLoading.value = true;
+            const data = await $api<AuthUser>('/login', {
+                method: 'POST',
+                body: {email, password}
+            })
+
+            authUser.value = data;
+            authenticated.value = data._id;
+
             const token = useCookie('token');
-            token.value = data.value.token;
-            authUser.value = data.value;
-            authenticated.value = parseJwt(token.value)._id;
+            const userCookie = useCookie('user');
+
+            userCookie.value = JSON.stringify(data);
+            token.value = data.token;
 
             await router.push('/admin')
-        } else {
-            if(error.value){
-                // $toast.clear();
-                // $toast.error(error.value.data)
-            }
+        } catch (e) {
+
+        } finally {
+            authLoading.value = false;
         }
     }
 

@@ -19,9 +19,10 @@ export interface AuthUser {
     updatedAt: Date
     __v: number
     token: string
+    companyProfileId: string
 }
 
-export interface Company {
+export interface CreateCompany {
     user: string
     image?: string
     description: string
@@ -29,4 +30,8 @@ export interface Company {
     employees?: any[]
     show_price: boolean
     location: string
+}
+
+export interface Company extends CreateCompany{
+    workingDays: number[]
 }

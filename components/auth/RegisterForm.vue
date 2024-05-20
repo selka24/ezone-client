@@ -17,9 +17,6 @@ const onSubmit = handleSubmit(values => {
     authStore.registerUser(values)
 });
 
-// const [email] = defineField('email');
-// const [password] = defineField('password');
-// const [username] = defineField('username');
 const [role] = defineField('role');
 
 const roleOptions: string[] = [

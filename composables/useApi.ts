@@ -2,22 +2,26 @@ import type { UseFetchOptions } from 'nuxt/app'
 
 export function useApi<T>(
     url: string | (() => string),
-    options: Omit<UseFetchOptions<T>, 'default'> & { default: () => T | Ref<T> },
+    options: Omit<UseFetchOptions<T>, 'default'> & { default: () => T | Ref<T>},
+    customOptions: {noToast: boolean} = {noToast: false}
 ) {
     const {$toast} = useNuxtApp();
+    const {noToast} = customOptions;
 
     return useFetch(url, {
-        ...options,
-        $fetch: useNuxtApp().$api,
         async onResponseError({ response }) {
             if (response.status === 401) {
                 await navigateTo('/login')
             } else {
-                console.log('response', $toast)
                 // if(!import.meta.server)
-                $toast.error('Something went wrong!')
+                if(!process.server && !noToast) {
+                    console.log('response', $toast)
+                    $toast.error('Something went wrong!')
+                }
             }
         },
+        ...options,
+        $fetch: useNuxtApp().$api,
     })
 }
 

@@ -42,7 +42,19 @@ export default defineNuxtConfig({
     fontawesome: {
         component: 'fai',
         icons: {
-            solid: ['right-from-bracket', 'house'],
+            solid: [
+                'right-from-bracket',
+                'house',
+                'wallet',
+                'gear',
+                'plus',
+                'people-group',
+                'chart-simple',
+                'magnifying-glass-chart'
+            ],
+            regular: [
+                'building'
+            ]
         }
     },
     veeValidate: {
