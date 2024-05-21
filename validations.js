@@ -1,5 +1,12 @@
 import * as yup from 'yup';
 
+const mainInfoObject = {
+    "image": yup.string(),
+    "description": yup.string().required(),
+    "name": yup.string().required(),
+    "show_price": yup.boolean(),
+    "location": yup.string().required()
+}
 
 
 export const registerValidationSchema = yup.object({
@@ -28,12 +35,14 @@ export const employeeValidationSchema = yup.object({
     services: yup.array().of(serviceValidationSchema).nullable()
 })
 
+
+export const mainInfoValidationSchema = yup.object(mainInfoObject)
+
+export const servicesSchema = yup.object({
+    services: yup.array().of(serviceValidationSchema).nullable()
+})
+
 export const companyValidationSchema = yup.object({
-    // "user": yup.string().required(),
-    "image": yup.string(),
-    "description": yup.string().required(),
-    "name": yup.string().required(),
+    ...mainInfoObject,
     "employees": yup.array().of(employeeValidationSchema).nullable(),
-    "show_price": yup.boolean(),
-    "location": yup.string().required()
 })

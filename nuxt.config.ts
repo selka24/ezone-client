@@ -36,6 +36,7 @@ export default defineNuxtConfig({
     modules: [
         '@nuxtjs/tailwindcss',
         '@vee-validate/nuxt',
+        '@vueuse/nuxt',
         '@pinia/nuxt',
         '@vesp/nuxt-fontawesome',
     ],

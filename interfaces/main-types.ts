@@ -1,3 +1,5 @@
+import * as yup from "yup";
+
 export interface AuthLogin {
     email: string
     password: string
@@ -22,14 +24,23 @@ export interface AuthUser {
     companyProfileId: string
 }
 
-export interface CreateCompany {
-    user: string
+export interface CompanyMainInfo {
     image?: string
     description: string
     name: string
-    employees?: any[]
     show_price: boolean
     location: string
+}
+
+export interface Service {
+    "title": string
+    "duration": number
+    "price": number
+}
+
+export interface CreateCompany extends CompanyMainInfo {
+    user: string
+    employees?: any[]
 }
 
 export interface Company extends CreateCompany{
