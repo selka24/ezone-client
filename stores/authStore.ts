@@ -3,8 +3,8 @@ import {acceptHMRUpdate, defineStore} from 'pinia';
 
 export const useAuthStore =     defineStore('authStore', () => {
     const router = useRouter();
-    const {parseJwt} = useUtils();
-    const { $toast, $api } = useNuxtApp()
+    const { $toast, $api } = useNuxtApp();
+    const companyStore = useCompanyStore()
 
     //state
     const authUser = ref<AuthUser | null>(null);
@@ -47,8 +47,8 @@ export const useAuthStore =     defineStore('authStore', () => {
 
             userCookie.value = JSON.stringify(data);
             token.value = data.token;
-
-            await router.push('/admin')
+            // await actGetMyCompany();
+            await router.push('/admin');
         } catch (e) {
 
         } finally {
@@ -58,7 +58,10 @@ export const useAuthStore =     defineStore('authStore', () => {
 
     const actLogOut = () => {
         const token = useCookie('token');
+        const userCookie = useCookie('user');
         token.value = null;
+        userCookie.value = null;
+        authUser.value = null;
         authenticated.value = '';
         router.push('/');
     }

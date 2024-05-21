@@ -1,15 +1,16 @@
 <script setup lang="ts">
 import AdminWelcomeScreen from "~/components/admin/AdminWelcomeScreen.vue";
 const companyStore = useCompanyStore();
+const authStore = useAuthStore();
 
-if(!companyStore.company){
-    // await companyStore.actGetMyCompany();
-}
+// onBeforeMount(() => {
+//     companyStore.actGetMyCompany();
+// })
 </script>
 
 <template>
     <div>
-        <AdminWelcomeScreen v-if="!companyStore.company"/>
+        <AdminWelcomeScreen v-if="!authStore.authUser?.companyProfileId"/>
     </div>
 </template>
 

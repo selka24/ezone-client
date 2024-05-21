@@ -5,7 +5,7 @@ export function useApi<T>(
     options: Omit<UseFetchOptions<T>, 'default'> & { default: () => T | Ref<T>},
     customOptions: {noToast: boolean} = {noToast: false}
 ) {
-    const {$toast} = useNuxtApp();
+    const {$toast, $api} = useNuxtApp();
     const {noToast} = customOptions;
 
     return useFetch(url, {
@@ -21,7 +21,7 @@ export function useApi<T>(
             }
         },
         ...options,
-        $fetch: useNuxtApp().$api,
+        $fetch: $api,
     })
 }
 

@@ -3,20 +3,29 @@ export default defineNuxtPlugin(() => {
     const token = useCookie('token');
     const {$toast} = useNuxtApp();
 
+    const headers: any = {};
+    if(token.value) {
+        headers.Authorization = token.value;
+    }
+
     const api = $fetch.create({
         baseURL: config.public.baseURL,
-        onRequest({ request, options, error }) {
-            if (token.value) {
-                const headers = options.headers ||= {}
-                if (Array.isArray(headers)) {
-                    headers.push(['Authorization', `${token.value}`])
-                } else if (headers instanceof Headers) {
-                    headers.set('Authorization', `${token.value}`)
-                } else {
-                    headers.Authorization = `${token.value}`
-                }
-            }
-        },
+        headers,
+        // onRequest({ request, options, error }) {
+        //     if (token.value) {
+        //         const headers = options.headers ||= {}
+        //         if (Array.isArray(headers)) {
+        //             headers.push(['Authorization', `${token.value}`])
+        //             console.log(token.value, 'array toookeeen')
+        //         } else if (headers instanceof Headers) {
+        //             console.log(token.value, 'SEET toookeeen')
+        //             headers.set('Authorization', `${token.value}`)
+        //         } else {
+        //             console.log(token.value, 'normal toookeeen')
+        //             headers.Authorization = `${token.value}`
+        //         }
+        //     }
+        // },
         async onResponseError({ response }) {
             if (response.status === 401) {
                 await navigateTo('/login')

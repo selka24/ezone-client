@@ -2,21 +2,25 @@ import type {AuthUser} from "~/interfaces/main-types";
 
 export default defineNuxtRouteMiddleware((to) => {
     const authStore = useAuthStore();
+    // const companyStore = useCompanyStore();
     const { authenticated, authUser } = storeToRefs(authStore); // make authenticated state reactive
     const token = useCookie('token'); // get token from cookies
     const {parseJwt} = useUtils();
-    const user = useCookie<AuthUser | null>('user');
+
+    const cookieUser = useCookie<AuthUser | null>('user');
 
     const noAuthPage = to?.name === 'login' || to?.name === 'register' || to?.path === '/';
     const noCompanyPages = ['/admin/create', '/admin'];
     const requiresCompany = !noCompanyPages.includes(to.path);
     const hasCompany = authUser.value?.companyProfileId;
 
-    if (token.value && user.value) {
+    if (token.value && cookieUser.value) {
         // check if value exists
         const {_id} = parseJwt(token.value)
-        authenticated.value = _id; // update the state to authenticated
-        authUser.value = user.value;
+        if(!authenticated.value || !authUser.value){
+            authenticated.value = _id; // update the state to authenticated
+            authUser.value = cookieUser.value;
+        }
         if(!hasCompany && requiresCompany){
             return navigateTo('/admin');
         }

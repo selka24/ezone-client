@@ -5,13 +5,34 @@ export const useCompanyStore = defineStore('companyStore', () => {
     const {$api} = useNuxtApp();
     const authStore = useAuthStore();
 
+    const abortController = new AbortController();
+
     //state
-    // const company = ref<Company | null>(null);
     const creatingCompany = ref(false);
-    const {data: company, refresh} = useApi<Company | null>(`/company/${authStore.authUser?.companyProfileId}`, {
+    const {data: company, refresh, pending, status} = useApi<Company | null>(() => `/company/${authStore.authUser?.companyProfileId}`, {
         method: 'GET',
-        default: () => null
+        lazy: true,
+        immediate: false,
+        default: () => null,
+        signal: abortController.signal,
+        // onRequest(){
+        //     console.log('aaasdasdddsss')
+        // },
+        // onResponse(){
+        //     console.log('response aaasdasdddsss')
+        // }
+        // onResponseError(){
+        //     console.log(authStore.authUser, 'aaaaaaaa')
+        //     console.log('errrorrr')
+        //     company.value = null;
+        // }
     }, {noToast: true})
+
+    watch(() => authStore.authUser, (newVal) => {
+        if(!newVal?.companyProfileId){
+            abortController.abort('Cant fetch company without ID');
+        }
+    })
 
 
     //actions
@@ -43,8 +64,10 @@ export const useCompanyStore = defineStore('companyStore', () => {
     return {
         company,
         creatingCompany,
+        pending,
         actCreateCompany,
-        actGetMyCompany
+        status,
+        actGetMyCompany,
     }
 })
 
