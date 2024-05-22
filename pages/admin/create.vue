@@ -39,9 +39,9 @@ const handleNextStep = (values: CompanyMainInfo) => {
 
 <template>
     <div class="flex flex-col items-center gap-10">
-        <Stepper :steps="steps" :curr-step="currStep" class="max-w-2xl w-full"/>
+        <Stepper :steps="steps" :curr-step="currStep" class="max-w-screen-md w-full"/>
 
-        <div class="card shrink-0 w-full max-w-lg shadow-2xl bg-base-100">
+        <div class="card shrink-0 w-full max-w-screen-sm shadow-2xl bg-base-100">
             <transition-group name="page">
                 <MainInfoForm v-show="currStep === 0" @form-submit="handleNextStep" :key="0"/>
                 <ServicesForm v-show="currStep === 1"  :key="1"/>

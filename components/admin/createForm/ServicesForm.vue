@@ -1,31 +1,53 @@
 <script setup lang="ts">
-import type {CompanyMainInfo, Service} from "~/interfaces/main-types";
+import type {Service} from "~/interfaces/main-types";
 import {serviceValidationSchema} from "~/validations";
 import InputText from "~/components/inputs/InputText.vue";
-import TimePicker from "~/components/ui/TimePicker.vue";
+import InputDuration from "~/components/inputs/InputDuration.vue";
+import ServiceStat from "~/components/admin/services/ServiceStat.vue";
 
-const {handleSubmit} = useForm<Service[]>({
+const services = ref<Service[]>([]);
+const {handleSubmit, resetForm} = useForm<Service>({
     validationSchema: serviceValidationSchema,
+    initialValues: {
+        duration: 0
+    }
 })
 
-const duration = ref('00:00:00');
+const handleRemoveService = (idx: number) => {
+    services.value.splice(idx, 1);
+}
 
-
-    const handleServicesSubmit = handleSubmit(() => {
-
+const handleServicesSubmit = handleSubmit((values) => {
+    console.log(values)
+    services.value.push(values);
+    resetForm();
 })
 </script>
 
 <template>
-    <form @submit.prevent="handleServicesSubmit" class="card-body" novalidate>
-        <div class="grid grid-cols-8 gap-5 w-full">
-
-            <InputText name="title" class="col-span-4"/>
-            <time-picker v-model="duration" class="col-span-2"/>
-<!--        <InputText name="duration" :attributes="{type: 'time'}"/>-->
-            <InputText name="price" class="col-span-2"/>
+    <div class="card-body">
+        <form @submit.prevent="handleServicesSubmit" novalidate>
+            <div class="grid grid-cols-10 gap-5 w-full">
+                <InputText name="title" class="col-span-4" :attributes="{placeholder: 'Emri i shërbimit'}"/>
+                <InputDuration name="duration" class="col-span-2"/>
+                <InputText name="price" class="col-span-2" :attributes="{placeholder: 'ALL', type: 'number'}"/>
+                <button class="btn btn-outline btn-primary mt-9 mb-auto col-span-2">Add</button>
+            </div>
+        </form>
+        <div class="divider divider-neutral"></div>
+        <div class="flex flex-wrap gap-5">
+            <div v-for="(service, idx) in services"
+                 class="relative"
+                 :key="service.title + service.price">
+                <fai @click="handleRemoveService(idx)"
+                     icon="circle-xmark"
+                     class="absolute cursor-pointer -right-2 text-error text-xl" />
+                <ServiceStat :service="service"/>
+            </div>
         </div>
-    </form>
+        <h2 class="text-info">Shtoni te pakten nje sherbim per te vazhduar ne hapin tjeter</h2>
+        <button class="btn btn-primary mt-10" :disabled="services.length === 0">Vazhdo</button>
+    </div>
 </template>
 
 <style scoped>

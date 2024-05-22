@@ -23,8 +23,8 @@ export const loginValidationSchema = yup.object({
 
 export const serviceValidationSchema = yup.object({
     "title": yup.string().required(),
-    "duration": yup.number().integer().required(),
-    "price": yup.number()
+    "duration": yup.number().integer().required().min(5, 'duration must be greater than or equal to 5 minutes'),
+    "price": yup.number().required()
 })
 
 export const employeeValidationSchema = yup.object({

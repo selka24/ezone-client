@@ -13,7 +13,14 @@ export const useUtils = () => {
         return JSON.parse(jsonPayload);
     }
 
+    const displayDuration = (duration: number) => {
+        const hours = Math.floor(duration/60);
+        const minutes = duration % 60;
+        return `${hours ? (hours + ' orë') : ''} ${minutes ? (minutes + ' minuta') : ''}`
+    }
+
     return {
-        parseJwt
+        parseJwt,
+        displayDuration
     }
 }

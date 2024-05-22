@@ -48,6 +48,7 @@ export default defineNuxtConfig({
                 'house',
                 'wallet',
                 'gear',
+                'circle-xmark',
                 'plus',
                 'people-group',
                 'chart-simple',

@@ -1,38 +1,36 @@
 <template>
     <label ref="timePicker" class="form-control w-full relative">
         <div class="label">
-            <span class="label-text capitalize">Duration</span>
+            <span class="label-text capitalize">{{ label || 'Duration' }}</span>
         </div>
-        <input :value="`${timeParts[0] || '00'} : ${timeParts[1] || '00'}`"
-               @focus="handleToggle"
-               class="input input-bordered" type="text"/>
-<!--        <div class="label">-->
-<!--            <span class="label-text-alt text-error">{{ errorMessage }}</span>-->
-<!--        </div>-->
+        <input :value="inputValue"
+               readonly
+               @click="handleToggle"
+               class="input input-bordered text-center" type="text"/>
+        <div class="label" v-if="errorMessage">
+            <span class="label-text-alt text-error">{{ errorMessage }}</span>
+        </div>
 
         <div v-show="selectState" class="flex absolute z-10 mt-1 top-[85px] max-h-56 w-full rounded-md bg-base-100 py-1 shadow-lg">
-            <div class="overflow-y-scroll no-scrollbar border-r border-neutral">
+            <div class="overflow-y-scroll no-scrollbar w-full text-center">
                 <div v-for="hour in hours" :key="hour + 'h'"
                      @click="handleTimeChange(hour, 0)"
-                     class="relative cursor-pointer select-none py-2 px-3 hover:bg-primary hover:text-primary-content">
-                    <div class="items-center">
-                        <span :class="[timeParts.hour === hour ? 'font-semibold' : 'font-normal', 'block']">
-                            {{ hour }}
-                        </span>
-                    </div>
+                     :class="[currHours === hour ? 'font-semibold text-primary' : 'font-normal', 'relative cursor-pointer select-none py-2 hover:bg-primary hover:text-primary-content']">
+<!--                        <span :class="[currHours === hour ? 'font-semibold text-primary' : 'font-normal']">-->
+                            {{ addZero(hour) }}
+<!--                        </span>-->
                 </div>
             </div>
-            <div  class="overflow-y-scroll no-scrollbar">
+            <div class="divider divider-horizontal divider-neutral m-0"></div>
+            <div  class="overflow-y-scroll no-scrollbar w-full text-center">
                 <div v-for="minute in minutes"
                      @click="handleTimeChange(minute, 1)"
                      :key="minute + 'm'"
-                     class="relative cursor-pointer select-none py-2 px-3 hover:bg-primary hover:text-primary-content">
-                    <div class="items-center">
-                        <!-- Selected: "font-semibold", Not Selected: "font-normal" -->
-                        <span :class="[timeParts.minute === minute ? 'font-semibold' : 'font-normal', 'block']">
-                            {{ minute }}
-                        </span>
-                    </div>
+                     :class="[currMinutes === minute ? 'font-semibold text-primary' : 'font-normal', 'relative cursor-pointer select-none py-2 hover:bg-primary hover:text-primary-content']">
+                <!-- Selected: "font-semibold", Not Selected: "font-normal" -->
+<!--                        <span :class="[currMinutes === minute ? 'font-semibold' : 'font-normal', 'block']">-->
+                            {{ addZero(minute) }}
+<!--                        </span>-->
                 </div>
             </div>
         </div>
@@ -66,34 +64,53 @@
 <!--        </div>-->
 <!--    </div>-->
 </template>
-<script setup>
+<script setup lang="ts">
 const emit = defineEmits(['update:modelValue']);
-const props = defineProps(['modelValue'])
+const props = defineProps(['modelValue', 'label', 'errorMessage'])
 const timePicker = ref(null);
 const selectState = ref(false);
 const handleClickOutside = () => selectState.value = false;
 
 onClickOutside(timePicker, handleClickOutside)
 
-const addZero = (num) => {
-    num = `${num}`
-    if(num.length === 1)
-        return `0${num}`;
-    return num;
+const addZero = (num: number) => {
+    const stringNum = `${num}`
+    if(stringNum.length === 1)
+        return `0${stringNum}`;
+    return stringNum;
 }
-const hours = [...Array(6).keys()].map(x => addZero(x));
-const minutes = [...Array(12).keys()].map(x => addZero(x*5));
 
+const hours = [...Array(4).keys()];
+const minutes = [0, 15, 30, 45] //[...Array(12).keys()].map(x => x*5);
+
+const currHours = computed(() => {
+    return Math.floor(props.modelValue/60);
+})
+
+const currMinutes = computed(() => {
+    return props.modelValue % 60
+})
+
+const inputValue = computed(() => {
+    return `${addZero(currHours.value) || '00'} : ${addZero(currMinutes.value) || '00'}`
+})
 
 const timeParts = computed(() => {
     return props.modelValue.split(':');
 })
 
 
-const handleTimeChange = (value, idx) => {
-    console.log(timeParts.value, 'timePArts')
-    const newValue = timeParts.value.toSpliced(idx, 1, value).join(':');
-    emit('update:modelValue', newValue);
+const handleTimeChange = (value: number, idx: number) => {
+    let totalMinutes = 0;
+    if(idx){ //if its minutes
+        totalMinutes = (currHours.value * 60) + Number(value);
+    } else { //if its hours
+        totalMinutes = (Number(value) * 60) + currMinutes.value;
+    }
+    emit('update:modelValue', totalMinutes);
+    // console.log(timeParts.value, 'timePArts')
+    // const newValue = timeParts.value.toSpliced(idx, 1, value).join(':');
+    // emit('update:modelValue', newValue);
 }
 
 const handleToggle = () => {
