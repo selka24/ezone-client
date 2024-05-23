@@ -5,6 +5,9 @@ import InputText from "~/components/inputs/InputText.vue";
 import InputDuration from "~/components/inputs/InputDuration.vue";
 import ServiceStat from "~/components/admin/services/ServiceStat.vue";
 
+const emit = defineEmits<{
+    servicesSubmit: [Service[]]
+}>()
 const services = ref<Service[]>([]);
 const {handleSubmit, resetForm} = useForm<Service>({
     validationSchema: serviceValidationSchema,
@@ -22,6 +25,10 @@ const handleServicesSubmit = handleSubmit((values) => {
     services.value.push(values);
     resetForm();
 })
+
+const handleContinue = () => {
+    emit('servicesSubmit', services.value);
+}
 </script>
 
 <template>
@@ -45,8 +52,12 @@ const handleServicesSubmit = handleSubmit((values) => {
                 <ServiceStat :service="service"/>
             </div>
         </div>
-        <h2 class="text-info">Shtoni te pakten nje sherbim per te vazhduar ne hapin tjeter</h2>
-        <button class="btn btn-primary mt-10" :disabled="services.length === 0">Vazhdo</button>
+        <h2 class="text-info" v-show="!services.length">Shtoni te pakten nje sherbim per te vazhduar ne hapin tjeter</h2>
+        <button class="btn btn-primary mt-10"
+                @click="handleContinue"
+                :disabled="services.length === 0">
+            Vazhdo
+        </button>
     </div>
 </template>
 

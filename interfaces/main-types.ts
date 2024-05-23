@@ -1,5 +1,3 @@
-import * as yup from "yup";
-
 export interface AuthLogin {
     email: string
     password: string
@@ -32,15 +30,41 @@ export interface CompanyMainInfo {
     location: string
 }
 
+enum Days {
+    monday = "monday",
+    tuesday = "tuesday",
+    wednesday = "wednesday",
+    thursday = "thursday",
+    friday = "friday",
+    saturday = "saturday",
+    sunday = "sunday",
+}
+
+export interface WorkDay {
+    day: Days,
+    start_time: string
+    end_time: string
+}
+
+
 export interface Service {
     "title": string
     "duration": number
     "price": number
 }
 
+export interface Employee {
+    company_id: string
+    name: string
+    last_name: string
+    job_title: string
+    services: Service[]
+    working_days: WorkDay[]
+}
+
 export interface CreateCompany extends CompanyMainInfo {
     user: string
-    employees?: any[]
+    employees?: Employee[]
 }
 
 export interface Company extends CreateCompany{
