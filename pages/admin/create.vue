@@ -6,6 +6,7 @@ import Stepper from "~/components/ui/Stepper.vue";
 import MainInfoForm from "~/components/admin/createForm/MainInfoForm.vue";
 import type {Company, CompanyMainInfo, CreateCompany, Service} from "~/interfaces/main-types";
 import ServicesForm from "~/components/admin/createForm/ServicesForm.vue";
+import StaffForm from "~/components/admin/createForm/StaffForm.vue";
 const authStore = useAuthStore();
 const companyStore = useCompanyStore();
 
@@ -48,6 +49,7 @@ const handleNextStep = (values: CompanyMainInfo) => {
             <transition-group name="page">
                 <MainInfoForm v-show="currStep === 0" @form-submit="handleNextStep" :key="0"/>
                 <ServicesForm v-show="currStep === 1" @services-submit="handleCompanyServices" :key="1"/>
+                <StaffForm v-show="currStep === 2" :key="2" :services="companyServices"/>
             </transition-group>
             <span v-show="companyStore.creatingCompany" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 loading loading-bars loading-lg"></span>
         </div>
