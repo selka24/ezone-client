@@ -1,8 +1,5 @@
 <script setup lang="ts">
 import { useField } from 'vee-validate';
-interface Options {
-
-}
 const props = defineProps({
     name: {
         type: String,
@@ -31,10 +28,15 @@ const props = defineProps({
 // If the name changes you want `useField` to be able to pick it up
 const { value, errorMessage } = useField<any>(() => props.name);
 
+const isSelected = (item: any) => {
+    if(props.multiple && value.value){
+        return value.value.findIndex((opt: any) => opt[props.displayKey] === item[props.displayKey]);
+    }
+    return -1
+}
 
 const selectModel = computed(() =>{
     if(props.multiple && value.value){
-        console.log(value.value.map((opt: any) => opt[props.displayKey]))
         return value.value.map((opt: any) => opt[props.displayKey]).join(', ');
     }
     return value.value || props.attributes?.placeholder || `Select a ${props.name}`;
@@ -43,7 +45,7 @@ const selectModel = computed(() =>{
 const handleSelect = (selectedValue: any) => {
     if(props.multiple){
         if(value.value){
-            const idx = value.value.findIndex((opt: any) => opt[props.displayKey] === selectedValue[props.displayKey]);
+            const idx = isSelected(selectedValue);
             if(idx >= 0) {
                 value.value.splice(idx, 1);
             } else {
@@ -61,7 +63,7 @@ const handleSelect = (selectedValue: any) => {
 <template>
     <div class="form-control w-full dropdown">
         <div class="label">
-            <span class="label-text">{{ name }}</span>
+            <span class="label-text capitalize">{{ name }}</span>
         </div>
         <div role="button"
              tabindex="0"
@@ -69,7 +71,7 @@ const handleSelect = (selectedValue: any) => {
             {{selectModel}}
         </div>
         <ul tabindex="0" class="dropdown-content w-full top-24 z-[1] menu p-2 shadow-2xl bg-base-100 rounded-box">
-            <li v-for="opt in options" :key="opt[displayKey]" class="capitalize">
+            <li v-for="opt in options" :key="opt[displayKey]" :class="['capitalize', {'font-semibold text-primary': isSelected(opt) >= 0}]">
                 <a @click.prevent="handleSelect(opt)">
                     {{ opt?.[displayKey] || opt  }}
                 </a>

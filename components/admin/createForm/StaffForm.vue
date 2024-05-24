@@ -15,6 +15,7 @@ const {handleSubmit, resetForm} = useForm<Employee>({
 const handleEmployeeSubmit = handleSubmit((employee) => {
     console.log(employee, 'eeeeeeeeee')
     employees.value.push(employee)
+    resetForm();
 })
 </script>
 
@@ -24,13 +25,13 @@ const handleEmployeeSubmit = handleSubmit((employee) => {
               novalidate
               class="grid grid-cols-6 gap-x-5">
             <InputText name="name" class="col-span-2"/>
-            <InputText name="lastname" class="col-span-2"/>
+            <InputText name="last_name" class="col-span-2"/>
             <InputText name="job_title" class="col-span-2"/>
             <InputSelect :options="services"
                          :multiple="true"
                          display-key="title"
                          class="col-span-4"
-                         name="Services"/>
+                         name="services"/>
             <div class="col-span-2">
                 <button type="submit" class="btn btn-primary mt-9 w-full">
                     <fai icon="plus"/>
