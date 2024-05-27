@@ -1,9 +1,9 @@
 <script setup lang="ts">
     const route = useRoute();
     const sidebarMenu = [
-        {title: 'My Business', icon: 'far building', route: '/admin/my-business'},
         {title: 'Dashboard', icon: 'chart-simple', route: '/admin'},
         {title: 'Staff', icon: 'people-group', route: '/admin/staff' },
+        {title: 'My Business', icon: 'far building', route: '/admin/my-business'},
         {title: 'Portfolio', icon: 'wallet'},
         {title: 'Reports', icon: 'magnifying-glass-chart'},
         {title: 'Settings', icon: 'gear'},
