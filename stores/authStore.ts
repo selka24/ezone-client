@@ -39,17 +39,20 @@ export const useAuthStore =     defineStore('authStore', () => {
                 body: {email, password}
             })
 
-            authUser.value = data;
-            authenticated.value = data._id;
-            companyStore.companyProfileId = data.companyProfileId || "";
 
             const token = useCookie('token');
             const userCookie = useCookie('user');
 
             userCookie.value = JSON.stringify(data);
             token.value = data.token;
-            // await actGetMyCompany();
-            await router.push('/admin');
+
+            authUser.value = data;
+            authenticated.value = data._id;
+            if(data.companyProfileId){
+                companyStore.companyProfileId = data.companyProfileId;
+            }
+
+            await router.push('/admin/my-business');
         } catch (e) {
 
         } finally {

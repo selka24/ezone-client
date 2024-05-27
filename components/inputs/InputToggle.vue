@@ -16,10 +16,10 @@ const { value, errorMessage } = useField(() => props.name);
 <template>
     <div class="form-control">
         <label class="cursor-pointer label">
-            <span class="label-text">{{label || name}}</span>
             <input type="checkbox" v-model="value" class="toggle toggle-primary" />
+            <span class="label-text ml-2">{{label || name}}</span>
         </label>
-        <div class="label">
+        <div class="label" v-if="errorMessage">
             <span class="label-text-alt text-error">{{ errorMessage }}</span>
         </div>
     </div>

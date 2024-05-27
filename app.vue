@@ -11,7 +11,7 @@ const companyStore = useCompanyStore();
 
 if(authStore.authenticated){
     console.log('getting')
-    companyStore.actGetMyCompany();
+    // companyStore.actGetMyCompany();
 }
 </script>
 <style>

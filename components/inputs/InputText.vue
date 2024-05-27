@@ -5,6 +5,10 @@ const props = defineProps({
         type: String,
         required: true
     },
+    noFormLabel: {
+        type: Boolean,
+        default: false
+    },
     attributes: {
         type: Object,
         default: () => {
@@ -20,7 +24,7 @@ const { value, errorMessage } = useField(() => props.name);
 </script>
 <template>
     <label class="form-control w-full">
-        <div class="label">
+        <div v-if="!noFormLabel" class="label">
             <span class="label-text capitalize">{{ name }}</span>
         </div>
         <input v-model="value" class="input input-bordered" v-bind="attributes"/>

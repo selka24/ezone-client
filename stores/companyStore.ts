@@ -5,7 +5,7 @@ export const useCompanyStore = defineStore('companyStore', () => {
     const {$api} = useNuxtApp();
     const authStore = useAuthStore();
 
-    const abortController = new AbortController();
+    // const abortController = new AbortController();
     const companyProfileId = ref('')
 
     //state

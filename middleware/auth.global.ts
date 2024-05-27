@@ -9,11 +9,11 @@ export default defineNuxtRouteMiddleware((to) => {
     const {parseJwt} = useUtils();
 
     const cookieUser = useCookie<AuthUser | null>('user');
+    const cpId = cookieUser.value?.companyProfileId;
 
     const noAuthPage = to?.name === 'login' || to?.name === 'register' || to?.path === '/';
     const noCompanyPages = ['/admin/create', '/admin'];
     const requiresCompany = !noCompanyPages.includes(to.path);
-    const hasCompany = authUser.value?.companyProfileId;
 
     if (token.value && cookieUser.value) {
         // check if value exists
@@ -21,9 +21,12 @@ export default defineNuxtRouteMiddleware((to) => {
         if(!authenticated.value || !authUser.value){
             authenticated.value = _id; // update the state to authenticated
             authUser.value = cookieUser.value;
-            companyProfileId.value = cookieUser.value?.companyProfileId || "";
+            if(cpId){
+                companyProfileId.value = cpId
+            }
         }
-        if(!hasCompany && requiresCompany){
+
+        if(!cpId && requiresCompany){
             return navigateTo('/admin');
         }
     }

@@ -1,17 +1,13 @@
 export default defineNuxtPlugin(() => {
     const config = useRuntimeConfig();
-    const token = useCookie('token');
     const {$toast} = useNuxtApp();
 
-    const headers: any = {};
-    if(token.value) {
-        headers.Authorization = token.value;
-    }
 
     const api = $fetch.create({
         baseURL: config.public.baseURL,
         // headers,
         onRequest({ request, options, error }) {
+            const token = useCookie('token');
             if (token.value) {
                 const headers = options.headers ||= {}
                 if (Array.isArray(headers)) {
