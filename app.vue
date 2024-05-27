@@ -6,7 +6,13 @@
   </div>
 </template>
 <script setup lang="ts">
+const authStore = useAuthStore();
+const companyStore = useCompanyStore();
 
+if(authStore.authenticated){
+    console.log('getting')
+    companyStore.actGetMyCompany();
+}
 </script>
 <style>
 .page-enter-active,

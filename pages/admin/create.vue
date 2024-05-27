@@ -1,55 +1,106 @@
 <script setup lang="ts">
-import {companyValidationSchema} from '~/validations';
-import InputText from "~/components/inputs/InputText.vue";
-import InputToggle from "~/components/inputs/InputToggle.vue";
 import Stepper from "~/components/ui/Stepper.vue";
 import MainInfoForm from "~/components/admin/createForm/MainInfoForm.vue";
-import type {Company, CompanyMainInfo, CreateCompany, Service} from "~/interfaces/main-types";
+import type {AuthUser, CompanyMainInfo, CreateCompany, Employee, Service} from "~/interfaces/main-types";
 import ServicesForm from "~/components/admin/createForm/ServicesForm.vue";
 import StaffForm from "~/components/admin/createForm/StaffForm.vue";
+
 const authStore = useAuthStore();
 const companyStore = useCompanyStore();
-
+const {companyProfileId} = storeToRefs(companyStore)
+const {$api} = useNuxtApp();
 const steps = [{title: 'Main Info'},{title: 'Add Services'},{title: 'Add Staff'}];
 const currStep = ref(0)
-
-const company = ref<CreateCompany | {}>({})
+const formLoading = ref(false)
+const company = ref<CreateCompany>()
 const companyServices = ref<Service[]>([])
-// const {handleSubmit, errors} = useForm<Company>({
-//     validationSchema: companyValidationSchema
-// })
 
 const handleCompanyServices = (values: Service[]) => {
     companyServices.value = values;
     currStep.value++;
 }
 
-const handleNextStep = (values: CompanyMainInfo) => {
-    company.value = {...company.value, ...values};
-    if(currStep.value === 2){
+const handleCreateCompany = async (values: CreateCompany) => {
+    // await companyStore.actCreateCompany({...values, user: authStore.authenticated});
+    try {
+        formLoading.value = true;
+        company.value = await $api<CreateCompany>('/profile/create', {
+            method: 'POST',
+            body: {...values, user: authStore.authenticated}
+        })
+        if(authStore.authUser){
+            console.log('aaaaaaaaaaaaa', authStore.authUser)
+            //@ts-ignore
+            // authStore.authUser = {...authStore.authUser, companyProfileId: company.value._id}
+            // const cookieUser = useCookie<AuthUser | null>('user');
+            companyProfileId.value = company.value._id
+            // cookieUser.value = authStore.authUser;
+        }
 
-    } else {
         currStep.value++
-    }
+    } catch (e) {
 
-    console.log(company.value)
+    } finally {
+        formLoading.value = false;
+    }
 }
 
-// const handleCreateCompany = handleSubmit((values) => {
-//     console.log('create company values', values);
-//     companyStore.actCreateCompany({...values, user: authStore.authenticated})
-// })
+const actCreateEmployee = async (employee: Employee) => {
+    try {
+        if(!company.value?.employees?.length && company.value){
+            company.value.employees = [];
+        }
+
+
+        const employeeResponse = await $api<Employee>('/employee/create', {
+            method: 'POST',
+            body: employee
+        })
+
+        company.value?.employees?.push(employeeResponse._id)
+
+        console.log({employeeResponse}, company.value?.employees, 'aaaaaaaaaaaaaa')
+    } catch (e) {
+
+    }
+}
+
+const handleCompanyEmployees = async (employee: Employee) => {
+    try {
+        const newEmployee = await actCreateEmployee(employee);
+
+    } catch (e) {
+
+    }
+}
+
+const handleStaffAssign = () => {
+    if(company.value)
+        companyStore.actUpdateCompany(company.value);
+}
+
 </script>
 
 <template>
     <div class="flex flex-col items-center gap-10">
+        {{JSON.stringify(companyStore.company)}}
         <Stepper :steps="steps" :curr-step="currStep" class="max-w-screen-md w-full"/>
 
         <div class="card shrink-0 w-full max-w-screen-sm shadow-2xl bg-base-100">
-            <transition-group name="page">
-                <MainInfoForm v-show="currStep === 0" @form-submit="handleNextStep" :key="0"/>
-                <ServicesForm v-show="currStep === 1" @services-submit="handleCompanyServices" :key="1"/>
-                <StaffForm v-show="currStep === 2" :key="2" :services="companyServices"/>
+            <transition-group name="page" mode="out-in">
+                <MainInfoForm v-show="currStep === 0"
+                              @form-submit="handleCreateCompany"
+                              :key="0"/>
+                <ServicesForm v-show="currStep === 1"
+                              @services-submit="handleCompanyServices"
+                              :key="1"/>
+                <StaffForm v-if="company?._id"
+                           v-show="currStep === 2"
+                           @employeesSubmit="handleCompanyEmployees"
+                           @continue="handleStaffAssign"
+                           :company-id="company?._id"
+                           :key="2"
+                           :services="companyServices"/>
             </transition-group>
             <span v-show="companyStore.creatingCompany" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 loading loading-bars loading-lg"></span>
         </div>

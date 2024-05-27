@@ -41,6 +41,7 @@ export const useAuthStore =     defineStore('authStore', () => {
 
             authUser.value = data;
             authenticated.value = data._id;
+            companyStore.companyProfileId = data.companyProfileId || "";
 
             const token = useCookie('token');
             const userCookie = useCookie('user');

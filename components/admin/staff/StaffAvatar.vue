@@ -14,7 +14,7 @@ defineProps<{staff: Employee}>()
             </div>
         </div>
         <div class="stat-value text-lg font-semibold">
-            {{ staff.name }} {{ staff.last_name }}
+            {{ staff.name }} {{ staff.lastname }}
         </div>
         <div class="stat-title">
             {{ staff.job_title }}

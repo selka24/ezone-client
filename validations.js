@@ -30,7 +30,7 @@ export const serviceValidationSchema = yup.object({
 export const employeeValidationSchema = yup.object({
     "company_id": yup.string().nullable(),
     "name": yup.string().required(),
-    "last_name": yup.string().required(),
+    "lastname": yup.string().required(),
     "job_title": yup.string().required(),
     services: yup.array().of(serviceValidationSchema).nullable()
 })

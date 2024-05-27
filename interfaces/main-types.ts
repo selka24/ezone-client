@@ -23,6 +23,7 @@ export interface AuthUser {
 }
 
 export interface CompanyMainInfo {
+    _id?: string
     image?: string
     description: string
     name: string
@@ -54,17 +55,18 @@ export interface Service {
 }
 
 export interface Employee {
+    _id: string,
     company_id: string
     name: string
-    last_name: string
+    lastname: string
     job_title: string
     services: Service[]
     working_days: WorkDay[]
 }
 
 export interface CreateCompany extends CompanyMainInfo {
-    user: string
-    employees?: Employee[]
+    user?: string
+    employees?: string[]
 }
 
 export interface Company extends CreateCompany{
