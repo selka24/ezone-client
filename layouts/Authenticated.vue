@@ -15,7 +15,7 @@ const noSidebar = computed(() => {
 <template>
     <div>
         <AdminSidebar v-if="hasCompany && !noSidebar"/>
-        <div :class="['flex flex-col items-center px-8 lg:px-10', {'ml-48': hasCompany}]">
+        <div :class="['flex flex-col items-center px-8 lg:px-10', {'ml-48': hasCompany && !noSidebar}]">
             <Header/>
             <div class="w-full mt-5">
                 <slot />

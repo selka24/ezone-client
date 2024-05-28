@@ -14,6 +14,8 @@ const currStep = ref(0)
 const formLoading = ref(false)
 const company = ref<CreateCompany>()
 const companyServices = ref<Service[]>([])
+const {authUser} = storeToRefs(authStore)
+const router = useRouter();
 
 const handleCompanyServices = (values: Service[]) => {
     companyServices.value = values;
@@ -65,25 +67,26 @@ const actCreateEmployee = async (employee: Employee) => {
     }
 }
 
-const handleCompanyEmployees = async (employee: Employee) => {
-    try {
-        const newEmployee = await actCreateEmployee(employee);
+// const handleCompanyEmployees = async (employee: Employee) => {
+//      await actCreateEmployee(employee);
+// }
 
-    } catch (e) {
-
+const handleStaffAssign = async () => {
+    if(company.value) {
+        const response = await companyStore.actUpdateCompany(company.value);
+        if(response === 'success'){
+            if(authUser.value && company.value._id){
+                authUser.value = {...authUser.value, companyProfileId: company.value._id}
+                router.replace('/admin/my-business')
+            }
+        }
     }
-}
-
-const handleStaffAssign = () => {
-    if(company.value)
-        companyStore.actUpdateCompany(company.value);
 }
 
 </script>
 
 <template>
     <div class="flex flex-col items-center gap-10">
-        {{JSON.stringify(companyStore.company)}}
         <Stepper :steps="steps" :curr-step="currStep" class="max-w-screen-md w-full"/>
 
         <div class="card shrink-0 w-full max-w-screen-sm shadow-2xl bg-base-100">
@@ -96,7 +99,7 @@ const handleStaffAssign = () => {
                               :key="1"/>
                 <StaffForm v-if="company?._id"
                            v-show="currStep === 2"
-                           @employeesSubmit="handleCompanyEmployees"
+                           @employeesSubmit="actCreateEmployee"
                            @continue="handleStaffAssign"
                            :company-id="company?._id"
                            :key="2"

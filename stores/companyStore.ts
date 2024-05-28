@@ -61,8 +61,9 @@ export const useCompanyStore = defineStore('companyStore', () => {
                 body: companyUpdate
             });
             await refresh();
+            return 'success';
         } catch (e) {
-
+            return 'error';
         }
     }
 
