@@ -24,7 +24,9 @@ export default defineNuxtConfig({
             setMiddleware(pages)
         }
     },
-    css: ['~/assets/css/main.css'],
+    css: [
+        '~/assets/css/main.css',
+    ],
     runtimeConfig: {
         public: {
             baseURL: process.dev ? process.env.BASE_URL_DEV : process.env.BASE_URL_PROD,

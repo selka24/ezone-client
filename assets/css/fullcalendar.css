@@ -1,0 +1,346 @@
+:root{
+    --daisy-color-mix: color-mix(in oklab, oklch(var(--p) / var(--tw-bg-opacity, 1)) 90%, black);
+    --daisy-primary: oklch(var(--p));
+    --daisy-primary-content: oklch(var(--pc));
+    --daisy-neutral-content: oklch(var(--nc));
+}
+
+
+body {
+    --fc-event-border-color: var(--daisy-primary);
+    --fc-event-bg-color: var(--daisy-primary);
+    --fc-event-text-color: var(--daisy-primary-content);
+}
+
+.fc {
+    /*Border color*/
+    --fc-border-color: oklch(var(--bc) / 0.2);
+    --fc-page-bg-color: oklch(var(--b1));
+    --fc-small-font-size: 0.95rem;
+
+    /*General*/
+    --fc-neutral-bg-color: oklch(var(--n));
+    --fc-today-bg-color: oklch(var(--b2));
+    --fc-bg-event-opacity: 0.3;
+    --fc-now-indicator-color: oklch(var(--er));
+    --fc-list-event-hover-bg-color: oklch(var(--b2));
+
+    /*Buttons*/
+    --fc-button-text-color: var(--daisy-primary-content);
+    --fc-button-bg-color: var(--daisy-primary);
+    --fc-button-border-color: var(--daisy-primary);
+
+    --fc-button-hover-bg-color: var(--daisy-color-mix);
+    --fc-button-hover-border-color: var(--daisy-color-mix);
+
+    --fc-button-active-bg-color: var(--daisy-color-mix);
+    --fc-button-active-border-color: var(--daisy-color-mix);
+
+/*// Table*/
+   table {
+       font-size: 1rem;
+   }
+
+/*// Button*/
+   .fc-button {
+       @apply btn btn-primary capitalize;
+   }
+
+
+    /* Toolbar title*/
+    .fc-toolbar-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: oklch(var(--nc));
+    }
+
+    /* Header cell*/
+    .fc-col-header-cell {
+        padding: 0.75rem 0.5rem;
+
+        .fc-col-header-cell-cushion  {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--daisy-neutral-content);
+        }
+    }
+
+    .fc-scrollgrid {
+        @apply rounded-md;
+
+        thead > tr {
+            td:first-child {
+                @apply rounded-tl-md;
+            }
+
+            td:last-child {
+                @apply rounded-tr-md;
+            }
+        }
+
+        tbody > tr:last-child {
+            td:first-child {
+                @apply rounded-bl-md;
+            }
+
+            td:last-child {
+                @apply rounded-br-md;
+            }
+        }
+    }
+
+    .fc-daygrid-event {
+        margin-top: 3px;
+    }
+
+    .fc-daygrid-dot-event,
+    .fc-daygrid-block-event {
+        .fc-event-title,
+        .fc-event-time {
+            padding: 0.25rem 0.25rem;
+        }
+    }
+
+    .fc-daygrid-day-number {
+        color: var(--daisy-neutral-content);
+    }
+
+/*// Primary button*/
+/*   .fc-button-primary {*/
+/*       margin: 0;*/
+
+/*   // Icon*/
+/*   .fc-icon {*/
+/*       font-size: 1.35rem;*/
+/*       margin-bottom: 0.15rem;*/
+/*   }*/
+
+/*       &:not(:disabled):not(.fc-button-active) {*/
+/*           &:focus,*/
+/*           &:hover,*/
+/*           &:active {*/
+/*               color: var(--#{$prefix}gray-900);*/
+
+/*               .fc-icon {*/
+/*                   color: var(--#{$prefix}gray-900);*/
+/*               }*/
+/*           }*/
+/*       }*/
+
+/*       &:not(:disabled).fc-button-active {*/
+/*           color: var(--#{$prefix}gray-900);*/
+
+/*           .fc-icon {*/
+/*               color: var(--#{$prefix}gray-900);*/
+/*           }*/
+/*       }*/
+/*   }*/
+
+/*// Button group*/
+/*   .fc-button-group {*/
+/*       .fc-button {*/
+/*           margin: 0 !important;*/
+/*       }*/
+/*   }*/
+
+/*// Toolbar title*/
+/*   .fc-toolbar-title {*/
+/*       font-size: 1.5rem;*/
+/*       font-weight: $font-weight-bold;*/
+/*       color: var(--#{$prefix}gray-800);*/
+/*   }*/
+
+/*// Header cell*/
+/*   .fc-col-header-cell {*/
+/*       padding: 0.75rem 0.5rem;*/
+
+/*       .fc-col-header-cell-cushion  {*/
+/*           font-size: 1.1rem;*/
+/*           font-weight: $font-weight-semibold;*/
+/*           color: var(--#{$prefix}gray-800);*/
+/*       }*/
+/*   }*/
+
+/*// Border radius*/
+/*   .fc-scrollgrid {*/
+/*       @include border-radius($border-radius);*/
+
+/*       thead > tr {*/
+/*           td:first-child {*/
+/*               @include border-top-start-radius($border-radius);*/
+/*           }*/
+
+/*           td:last-child {*/
+/*               @include border-top-end-radius($border-radius);*/
+/*           }*/
+/*       }*/
+
+/*       tbody > tr:last-child {*/
+/*           td:first-child {*/
+/*               @include border-bottom-start-radius($border-radius);*/
+/*           }*/
+
+/*           td:last-child {*/
+/*               @include border-bottom-end-radius($border-radius);*/
+/*           }*/
+/*       }*/
+/*   }*/
+
+/*// Event*/
+/*   .fc-daygrid-event {*/
+/*       margin-top: 3px;*/
+/*   }*/
+
+/*// Event title*/
+/*   .fc-daygrid-dot-event,*/
+/*   .fc-daygrid-block-event {*/
+/*       .fc-event-title,*/
+/*       .fc-event-time {*/
+/*           padding: 0.25rem 0.25rem;*/
+/*       }*/
+/*   }*/
+
+/*// Day number*/
+/*   .fc-daygrid-day-number {*/
+/*       color: var(--#{$prefix}gray-800);*/
+/*   }*/
+
+/*// Dot event*/
+/*   .fc-daygrid-dot-event {*/
+/*       background-color: var(--#{$prefix}light);*/
+/*       color: var(--#{$prefix}gray-600);*/
+
+/*       .fc-event-title {*/
+/*           font-weight: $font-weight-semibold;*/
+/*       }*/
+
+/*       &:hover,*/
+/*       &.fc-event-mirror {*/
+/*           background-color: var(--#{$prefix}light);*/
+/*           color: var(--#{$prefix}primary);*/
+/*       }*/
+/*   }*/
+
+/*// Event dot*/
+/*   .fc-daygrid-event-dot {*/
+/*       margin-left: 0.5rem;*/
+/*       margin-right: 0.1rem;*/
+/*   }*/
+
+/*// Popover*/
+/*   .fc-popover {*/
+/*       border: 0 !important;*/
+/*       background-color: $tooltip-bg;*/
+/*       box-shadow: var(--#{$prefix}dropdown-box-shadow);*/
+/*       @include border-radius($dropdown-border-radius);*/
+
+/*       .fc-popover-header {*/
+/*           @include border-top-radius($dropdown-border-radius);*/
+/*           padding: 0.65rem 0.75rem;*/
+/*           background-color: var(--#{$prefix}tooltip-bg);*/
+
+/*           .fc-popover-title {*/
+/*               color: var(--#{$prefix}gray-800);*/
+/*               font-size: 1rem;*/
+/*               font-weight: $font-weight-semibold;*/
+/*           }*/
+
+/*           .fc-popover-close {*/
+/*               font-size: 1rem;*/
+/*               color: var(--#{$prefix}gray-600);*/
+
+/*               &:hover {*/
+/*                   color: var(--#{$prefix}primary);*/
+/*               }*/
+/*           }*/
+/*       }*/
+
+/*       .fc-popover-body  {*/
+/*           padding: 0.5rem 0.75rem 0.75rem 0.75rem;*/
+/*       }*/
+/*   }*/
+
+/*// More link*/
+/*   .fc-daygrid-more-link {*/
+/*       font-weight: $font-weight-semibold;*/
+/*   }*/
+
+/*// Slot*/
+/*   .fc-timegrid-slot {*/
+/*       height: 2rem;*/
+/*       font-size: 0.95rem;*/
+/*   }*/
+
+/*// List*/
+/*   .fc-list-day-cushion,*/
+/*   .fc-list-table td {*/
+/*       padding: 0.85rem 1.15rem;*/
+/*   }*/
+
+/*.fc-list-day-text,*/
+/*.fc-list-day-side-text {*/
+/*    font-size: 1.1rem;*/
+/*    color: var(--#{$prefix}gray-900);*/
+/*    font-weight: $font-weight-bold;*/
+/*}*/
+
+/*.fc-list,*/
+/*//.fc-scroller,*/
+/*  .fc-list-table {*/
+/*      @include border-radius($border-radius);*/
+/*  }*/
+
+/*.fc-list {*/
+/*    overflow: hidden;*/
+/*    position: relative;*/
+/*}*/
+
+/*// Week*/
+/*   .fc-timegrid-axis {*/
+/*       padding-left: 0rem;*/
+/*       padding-right: 0;*/
+/*   }*/
+
+/*// Main*/
+/*   .fc-timegrid-event .fc-event-main {*/
+/*       padding: 0.25rem 0.25rem;*/
+/*   }*/
+
+/*// Indicator arrow*/
+/*   .fc-timegrid-now-indicator-arrow {*/
+/*       margin-top: -1px;*/
+/*   }*/
+/*}*/
+
+/*// Event*/
+/*   .fc-h-event {*/
+/*       font-weight: $font-weight-normal;*/
+/*   }*/
+
+/*// Mobile mode*/
+/*@include media-breakpoint-down(md) {*/
+/*    .fc {*/
+/*    // Header toolbar*/
+/*    .fc-header-toolbar {*/
+/*        flex-direction: column;*/
+/*        align-items: flex-start;*/
+
+/*        .fc-toolbar-chunk {*/
+/*            &:nth-child(1),*/
+/*            &:nth-child(3) {*/
+/*                order: 2;*/
+/*            }*/
+
+/*            &:nth-child(2) {*/
+/*                order: 1;*/
+/*            }*/
+
+/*            &:nth-child(2),*/
+/*            &:nth-child(1) {*/
+/*                margin-bottom: 1rem;*/
+/*            }*/
+/*        }*/
+/*    }*/
+/*    }*/
+/*}*/
+}
