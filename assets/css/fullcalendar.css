@@ -19,8 +19,9 @@ body {
     --fc-small-font-size: 0.95rem;
 
     /*General*/
+
     --fc-neutral-bg-color: oklch(var(--n));
-    --fc-today-bg-color: oklch(var(--b2));
+    --fc-today-bg-color: color-mix(in oklab, var(--daisy-primary) 20%, transparent);
     --fc-bg-event-opacity: 0.3;
     --fc-now-indicator-color: oklch(var(--er));
     --fc-list-event-hover-bg-color: oklch(var(--b2));
@@ -59,6 +60,7 @@ body {
         padding: 0.75rem 0.5rem;
 
         .fc-col-header-cell-cushion  {
+            /*@apply text-sm;*/
             font-size: 1.1rem;
             font-weight: 600;
             color: var(--daisy-neutral-content);
@@ -91,6 +93,7 @@ body {
 
     .fc-daygrid-event {
         margin-top: 3px;
+        @apply text-sm;
     }
 
     .fc-daygrid-dot-event,
@@ -105,242 +108,143 @@ body {
         color: var(--daisy-neutral-content);
     }
 
-/*// Primary button*/
-/*   .fc-button-primary {*/
-/*       margin: 0;*/
+    .fc-button-primary{
+        .fc-icon {
+            font-size: 1.35rem;
+            margin-bottom: 0.15rem;
+        }
+    }
 
-/*   // Icon*/
-/*   .fc-icon {*/
-/*       font-size: 1.35rem;*/
-/*       margin-bottom: 0.15rem;*/
-/*   }*/
+    .fc-button-primary:disabled,
+    .fc-button-primary[disabled] {
+        @apply btn btn-primary btn-disabled;
+    }
 
-/*       &:not(:disabled):not(.fc-button-active) {*/
-/*           &:focus,*/
-/*           &:hover,*/
-/*           &:active {*/
-/*               color: var(--#{$prefix}gray-900);*/
+    .fc-daygrid-dot-event {
+        @apply bg-base-200;
+        color: var(oklch(var(--n)));
 
-/*               .fc-icon {*/
-/*                   color: var(--#{$prefix}gray-900);*/
-/*               }*/
-/*           }*/
-/*       }*/
+        .fc-event-title {
+            @apply font-semibold;
+        }
 
-/*       &:not(:disabled).fc-button-active {*/
-/*           color: var(--#{$prefix}gray-900);*/
+        &:hover,
+        &.fc-event-mirror {
+            background-color: var(oklch(var(--n)));
+            color: var(--daisy-primary);
+        }
+    }
 
-/*           .fc-icon {*/
-/*               color: var(--#{$prefix}gray-900);*/
-/*           }*/
-/*       }*/
-/*   }*/
+    .fc-daygrid-event-dot {
+        margin-left: 0.5rem;
+        margin-right: 0.1rem;
+    }
 
-/*// Button group*/
-/*   .fc-button-group {*/
-/*       .fc-button {*/
-/*           margin: 0 !important;*/
-/*       }*/
-/*   }*/
 
-/*// Toolbar title*/
-/*   .fc-toolbar-title {*/
-/*       font-size: 1.5rem;*/
-/*       font-weight: $font-weight-bold;*/
-/*       color: var(--#{$prefix}gray-800);*/
-/*   }*/
+    .fc-popover {
+        border: 0 !important;
+        background-color: var(oklch(var(--tooltip-color)));
+        @apply rounded-md shadow-2xl;
 
-/*// Header cell*/
-/*   .fc-col-header-cell {*/
-/*       padding: 0.75rem 0.5rem;*/
+        .fc-popover-header {
+            @apply rounded-md;
+            padding: 0.65rem 0.75rem;
+            background-color: var(oklch(var(--tooltip-color)));
 
-/*       .fc-col-header-cell-cushion  {*/
-/*           font-size: 1.1rem;*/
-/*           font-weight: $font-weight-semibold;*/
-/*           color: var(--#{$prefix}gray-800);*/
-/*       }*/
-/*   }*/
+            .fc-popover-title {
+                color: var(oklch(var(--n)));
+                font-size: 1rem;
+                @apply font-bold;
+            }
 
-/*// Border radius*/
-/*   .fc-scrollgrid {*/
-/*       @include border-radius($border-radius);*/
+            .fc-popover-close {
+                font-size: 1rem;
+                color: var(oklch(var(--in)));
 
-/*       thead > tr {*/
-/*           td:first-child {*/
-/*               @include border-top-start-radius($border-radius);*/
-/*           }*/
+                &:hover {
+                    color: var(--daisy-primary);
+                }
+            }
+        }
 
-/*           td:last-child {*/
-/*               @include border-top-end-radius($border-radius);*/
-/*           }*/
-/*       }*/
+        .fc-popover-body  {
+            padding: 0.5rem 0.75rem 0.75rem 0.75rem;
+        }
+    }
 
-/*       tbody > tr:last-child {*/
-/*           td:first-child {*/
-/*               @include border-bottom-start-radius($border-radius);*/
-/*           }*/
 
-/*           td:last-child {*/
-/*               @include border-bottom-end-radius($border-radius);*/
-/*           }*/
-/*       }*/
-/*   }*/
+    .fc-daygrid-more-link {
+        @apply font-semibold;
+    }
 
-/*// Event*/
-/*   .fc-daygrid-event {*/
-/*       margin-top: 3px;*/
-/*   }*/
+    .fc-timegrid-slot {
+        height: 2rem;
+        font-size: 0.95rem;
+    }
 
-/*// Event title*/
-/*   .fc-daygrid-dot-event,*/
-/*   .fc-daygrid-block-event {*/
-/*       .fc-event-title,*/
-/*       .fc-event-time {*/
-/*           padding: 0.25rem 0.25rem;*/
-/*       }*/
-/*   }*/
+    .fc-list-day-cushion,
+    .fc-list-table td {
+        padding: 0.85rem 1.15rem;
+    }
 
-/*// Day number*/
-/*   .fc-daygrid-day-number {*/
-/*       color: var(--#{$prefix}gray-800);*/
-/*   }*/
+    .fc-list-day-text,
+    .fc-list-day-side-text {
+        font-size: 1.1rem;
+        @apply font-bold text-neutral;
+    }
 
-/*// Dot event*/
-/*   .fc-daygrid-dot-event {*/
-/*       background-color: var(--#{$prefix}light);*/
-/*       color: var(--#{$prefix}gray-600);*/
+    .fc-list,
+    .fc-list-table {
+        @apply rounded-md;
+    }
 
-/*       .fc-event-title {*/
-/*           font-weight: $font-weight-semibold;*/
-/*       }*/
+    .fc-list {
+        overflow: hidden;
+        position: relative;
+    }
 
-/*       &:hover,*/
-/*       &.fc-event-mirror {*/
-/*           background-color: var(--#{$prefix}light);*/
-/*           color: var(--#{$prefix}primary);*/
-/*       }*/
-/*   }*/
+    .fc-timegrid-axis {
+        padding-left: 0;
+        padding-right: 0;
+    }
 
-/*// Event dot*/
-/*   .fc-daygrid-event-dot {*/
-/*       margin-left: 0.5rem;*/
-/*       margin-right: 0.1rem;*/
-/*   }*/
+    .fc-timegrid-event .fc-event-main {
+        padding: 0.25rem 0.25rem;
+    }
 
-/*// Popover*/
-/*   .fc-popover {*/
-/*       border: 0 !important;*/
-/*       background-color: $tooltip-bg;*/
-/*       box-shadow: var(--#{$prefix}dropdown-box-shadow);*/
-/*       @include border-radius($dropdown-border-radius);*/
+    .fc-timegrid-now-indicator-arrow {
+        margin-top: -1px;
+    }
 
-/*       .fc-popover-header {*/
-/*           @include border-top-radius($dropdown-border-radius);*/
-/*           padding: 0.65rem 0.75rem;*/
-/*           background-color: var(--#{$prefix}tooltip-bg);*/
 
-/*           .fc-popover-title {*/
-/*               color: var(--#{$prefix}gray-800);*/
-/*               font-size: 1rem;*/
-/*               font-weight: $font-weight-semibold;*/
-/*           }*/
-
-/*           .fc-popover-close {*/
-/*               font-size: 1rem;*/
-/*               color: var(--#{$prefix}gray-600);*/
-
-/*               &:hover {*/
-/*                   color: var(--#{$prefix}primary);*/
-/*               }*/
-/*           }*/
-/*       }*/
-
-/*       .fc-popover-body  {*/
-/*           padding: 0.5rem 0.75rem 0.75rem 0.75rem;*/
-/*       }*/
-/*   }*/
-
-/*// More link*/
-/*   .fc-daygrid-more-link {*/
-/*       font-weight: $font-weight-semibold;*/
-/*   }*/
-
-/*// Slot*/
-/*   .fc-timegrid-slot {*/
-/*       height: 2rem;*/
-/*       font-size: 0.95rem;*/
-/*   }*/
-
-/*// List*/
-/*   .fc-list-day-cushion,*/
-/*   .fc-list-table td {*/
-/*       padding: 0.85rem 1.15rem;*/
-/*   }*/
-
-/*.fc-list-day-text,*/
-/*.fc-list-day-side-text {*/
-/*    font-size: 1.1rem;*/
-/*    color: var(--#{$prefix}gray-900);*/
-/*    font-weight: $font-weight-bold;*/
-/*}*/
-
-/*.fc-list,*/
-/*//.fc-scroller,*/
-/*  .fc-list-table {*/
-/*      @include border-radius($border-radius);*/
-/*  }*/
-
-/*.fc-list {*/
-/*    overflow: hidden;*/
-/*    position: relative;*/
-/*}*/
-
-/*// Week*/
-/*   .fc-timegrid-axis {*/
-/*       padding-left: 0rem;*/
-/*       padding-right: 0;*/
-/*   }*/
-
-/*// Main*/
-/*   .fc-timegrid-event .fc-event-main {*/
-/*       padding: 0.25rem 0.25rem;*/
-/*   }*/
-
-/*// Indicator arrow*/
-/*   .fc-timegrid-now-indicator-arrow {*/
-/*       margin-top: -1px;*/
-/*   }*/
-/*}*/
-
-/*// Event*/
-/*   .fc-h-event {*/
-/*       font-weight: $font-weight-normal;*/
-/*   }*/
-
-/*// Mobile mode*/
-/*@include media-breakpoint-down(md) {*/
-/*    .fc {*/
-/*    // Header toolbar*/
-/*    .fc-header-toolbar {*/
-/*        flex-direction: column;*/
-/*        align-items: flex-start;*/
-
-/*        .fc-toolbar-chunk {*/
-/*            &:nth-child(1),*/
-/*            &:nth-child(3) {*/
-/*                order: 2;*/
-/*            }*/
-
-/*            &:nth-child(2) {*/
-/*                order: 1;*/
-/*            }*/
-
-/*            &:nth-child(2),*/
-/*            &:nth-child(1) {*/
-/*                margin-bottom: 1rem;*/
-/*            }*/
-/*        }*/
-/*    }*/
-/*    }*/
-/*}*/
 }
+
+.fc-h-event {
+    @apply font-normal;
+}
+
+@media only screen and (max-width: 768px) {
+    .fc {
+        .fc-header-toolbar {
+            flex-direction: column;
+            align-items: flex-start;
+
+            .fc-toolbar-chunk {
+                &:nth-child(1),
+                &:nth-child(3) {
+                    order: 2;
+                }
+
+                &:nth-child(2) {
+                    order: 1;
+                }
+
+                &:nth-child(2),
+                &:nth-child(1) {
+                    margin-bottom: 1rem;
+                }
+            }
+        }
+    }
+}
+

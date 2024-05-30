@@ -5,8 +5,7 @@ const route = useRoute();
 </script>
 
 <template>
-    <div class="px-20">
-        <h1>{{ route.params.business_url }}</h1>
+    <div class="px-10">
         <client-only>
             <BaseCalendar />
         </client-only>
