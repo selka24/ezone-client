@@ -5,12 +5,15 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import listPlugin from "@fullcalendar/list";
 import interactionPlugin from "@fullcalendar/interaction";
 import events, { TODAY } from "@/core/data/events";
+import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
 
 const newEvent = () => {
     console.log('new eeevvveent')
 }
+
 const calendarOptions = {
-    plugins: [dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin],
+    schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives',
+    plugins: [dayGridPlugin, timeGridPlugin, listPlugin, interactionPlugin, resourceTimelinePlugin],
     headerToolbar: {
         left: "prev,next today",
         center: "title",
@@ -20,7 +23,7 @@ const calendarOptions = {
     navLinks: true, // can click day/week names to navigate views
     selectable: true,
     selectMirror: true,
-
+    initialView: 'resourceTimelineWeek',
     views: {
         dayGridMonth: { buttonText: "month" },
         timeGridWeek: { buttonText: "week" },

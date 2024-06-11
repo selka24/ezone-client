@@ -66,7 +66,16 @@
 </template>
 <script setup lang="ts">
 const emit = defineEmits(['update:modelValue']);
-const props = defineProps(['modelValue', 'label', 'errorMessage'])
+const props = withDefaults(defineProps<{
+    modelValue: number,
+    label?: string,
+    errorMessage?: string,
+    hours?: number[],
+    minutes?: number[]
+}>(), {
+    hours: () => [...Array(4).keys()],
+    minutes:  () => [0, 15, 30, 45]
+})
 const timePicker = ref(null);
 const selectState = ref(false);
 const handleClickOutside = () => selectState.value = false;
@@ -80,8 +89,8 @@ const addZero = (num: number) => {
     return stringNum;
 }
 
-const hours = [...Array(4).keys()];
-const minutes = [0, 15, 30, 45] //[...Array(12).keys()].map(x => x*5);
+// const hours = [...Array(4).keys()];
+// const minutes = [0, 15, 30, 45] //[...Array(12).keys()].map(x => x*5);
 
 const currHours = computed(() => {
     return Math.floor(props.modelValue/60);
@@ -95,11 +104,6 @@ const inputValue = computed(() => {
     return `${addZero(currHours.value) || '00'} : ${addZero(currMinutes.value) || '00'}`
 })
 
-const timeParts = computed(() => {
-    return props.modelValue.split(':');
-})
-
-
 const handleTimeChange = (value: number, idx: number) => {
     let totalMinutes = 0;
     if(idx){ //if its minutes
@@ -108,9 +112,6 @@ const handleTimeChange = (value: number, idx: number) => {
         totalMinutes = (Number(value) * 60) + currMinutes.value;
     }
     emit('update:modelValue', totalMinutes);
-    // console.log(timeParts.value, 'timePArts')
-    // const newValue = timeParts.value.toSpliced(idx, 1, value).join(':');
-    // emit('update:modelValue', newValue);
 }
 
 const handleToggle = () => {
