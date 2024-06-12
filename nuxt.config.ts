@@ -48,6 +48,7 @@ export default defineNuxtConfig({
             solid: [
                 'right-from-bracket',
                 'house',
+                'sheet-plastic',
                 'wallet',
                 'gear',
                 'circle-xmark',

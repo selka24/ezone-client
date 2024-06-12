@@ -1,10 +1,13 @@
 <script setup lang="ts">
     const route = useRoute();
+    const router = useRouter();
+    const companyStore = useCompanyStore()
     const sidebarMenu = [
         {title: 'Dashboard', icon: 'chart-simple', route: '/admin'},
         {title: 'Staff', icon: 'people-group', route: '/admin/staff' },
         {title: 'My Business', icon: 'far building', route: '/admin/my-business'},
         {title: 'Portfolio', icon: 'wallet'},
+        {title: 'Booking', icon: 'sheet-plastic'},
         {title: 'Reports', icon: 'magnifying-glass-chart'},
         {title: 'Settings', icon: 'gear'},
     ]
@@ -21,8 +24,12 @@
         }
     })
 
-    const handleNavigation = (goTo: string) => {
-        useRouter().push(goTo)
+    const handleNavigation = (goTo: string, title?: string) => {
+        if(title === 'Booking'){
+            router.push(`/booking/${companyStore.company?._id}`)
+        } else {
+            router.push(goTo)
+        }
     }
 </script>
 
@@ -35,7 +42,7 @@
             <ul class="tabs flex-col items-center">
                 <li v-for="(item, idx) in menu"
                     :key="item.title"
-                    @click="handleNavigation(item.route)"
+                    @click="handleNavigation(item.route, item.title)"
                     :class="['cursor-pointer w-full flex gap-2 py-3 pl-3 pr-8 my-3 rounded-l-3xl relative', {'active bg-base-100 text-fe5d0d': route.path === item.route}]">
                     <a @click.prevent>
                         <fai :icon="item.icon" :class="['text-lg', (route.path === item?.route ? 'text-primary' : 'text-white')]"/>

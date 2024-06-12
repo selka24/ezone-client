@@ -50,6 +50,7 @@ export interface WorkDay {
 
 export interface Service {
     "title": string
+    "id"?: string
     "duration": number
     "price": number
 }
@@ -69,6 +70,8 @@ export interface CreateCompany extends CompanyMainInfo {
     employees?: string[]
 }
 
-export interface Company extends CreateCompany{
+export interface Company extends CompanyMainInfo{
+    user?: string
     workingDays: number[]
+    employees?: Employee[]
 }

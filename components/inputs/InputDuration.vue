@@ -13,7 +13,7 @@ const props = defineProps({
 });
 // The `name` is returned in a function because we want to make sure it stays reactive
 // If the name changes you want `useField` to be able to pick it up
-const { value, errorMessage } = useField(() => props.name);
+const { value, errorMessage } = useField<number>(() => props.name);
 </script>
 <template>
    <TimePicker v-model="value" v-bind="attributes" :error-message="errorMessage"/>

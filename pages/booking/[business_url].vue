@@ -1,12 +1,32 @@
 <script setup lang="ts">
 import { DatePicker } from 'v-calendar';
 import 'v-calendar/style.css';
-import TimePicker from "~/components/ui/TimePicker.vue";
+import BookTimePicket from "~/components/booking/BookTimePicket.vue";
+import type {Company} from "~/interfaces/main-types";
+import {bookingFormValidationSchema} from '~/validations'
+import BookServiceSelect from "~/components/booking/BookServiceSelect.vue";
 
+const {$api} = useNuxtApp();
+const {addZero} = useUtils();
 const route = useRoute();
-const date = ref(new Date());
-const time = ref(0)
 
+const {data: company, pending} = await useAsyncData<Company>('bookCompany', () => $api(`/company/${route.params.business_url}`, {
+    method: 'GET',
+}))
+
+const date = ref(new Date());
+const time = ref<[number, number]>([0, 0]);
+
+const { handleSubmit } = useForm({
+    validationSchema: bookingFormValidationSchema
+})
+
+const services = computed(() => {
+    if(company.value?.employees?.[0]){
+        return company.value?.employees?.[0].services
+    }
+    return []
+})
 </script>
 
 <template>
@@ -14,23 +34,37 @@ const time = ref(0)
         <div class="max-w-screen-sm w-full">
             <div class="card bg-base-100 shadow-xl">
                 <div class="card-body">
-                    <div class="card-title justify-center">
+                    <div class="card-title justify-center mb-5">
                         <h2 class="font-bold text-3xl">
-                            {{route.params.business_url}}
+                            {{company?.name}}
                         </h2>
                     </div>
-                    <div class="prose">
-                        <h4>Please select a date</h4>
+                    <BookServiceSelect name="service_id" :services="services"/>
+                    <div>
+                        <h4 class="font-semibold text-lg">Please select a date and time</h4>
+                        <div class="divider divider-neutral my-5 w-full"></div>
                     </div>
-                    <div class="flex gap-10">
-                        <DatePicker v-model="date"
-                                    :min-date="new Date()"
-                                    view="weekly"
-                                    :expanded="true"
-                                    :transparent="true"
-                                    :borderless="true"
-                                    :is-dark="true"/>
-                        <TimePicker v-model="time"/>
+                    <div class="grid grid-cols-9 justify-center">
+                        <div class="col-span-6">
+                            <DatePicker v-model="date"
+                                        class="p-0 m-0"
+                                        :min-date="new Date()"
+                                        :expanded="true"
+                                        :transparent="true"
+                                        :borderless="true"
+                                        :is-dark="true"/>
+                        </div>
+                        <div class="col-span-1 w-full flex justify-center">
+                            <div class="divider divider-horizontal divider-neutral m-0 h-full"></div>
+                        </div>
+                        <div class="col-span-2">
+                            <div class="input input-bordered flex items-center justify-center mb-4">
+                                {{addZero(time[0])}} : {{addZero(time[1])}}
+                            </div>
+                            <div class="flex overflow-auto max-h-[270px]">
+                                <BookTimePicket v-model="time" :minutes-interval="5"/>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

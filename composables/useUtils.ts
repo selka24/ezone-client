@@ -19,8 +19,16 @@ export const useUtils = () => {
         return `${hours ? (hours + ' orë') : ''} ${minutes ? (minutes + ' minuta') : ''}`
     }
 
+    const addZero = (num: number) => {
+        const stringNum = `${num}`
+        if(stringNum.length === 1)
+            return `0${stringNum}`;
+        return stringNum;
+    }
+
     return {
         parseJwt,
+        addZero,
         displayDuration
     }
 }

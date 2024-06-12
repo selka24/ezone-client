@@ -46,3 +46,12 @@ export const companyValidationSchema = yup.object({
     ...mainInfoObject,
     "employees": yup.array().of(employeeValidationSchema).nullable(),
 })
+
+export const bookingFormValidationSchema = yup.object({
+    "service_id": yup.string().required(),
+    "name": yup.string().required(),
+    "phone": yup.number().required(),
+    "email": yup.string().required(),
+    "time": yup.string().required(),
+    "date": yup.string().required(),
+})
