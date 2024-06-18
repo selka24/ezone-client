@@ -10,15 +10,23 @@ const props = defineProps<{
 const {value, errorMessage} = useField<string>(() => props.name);
 
 const handleServiceSelect = (service: Service) => {
-    if(service.id){
-        value.value = service.id;
+    console.log('serviceeee', service)
+    if(service._id){
+        if(value.value === service._id){
+            value.value = ''
+        } else {
+            value.value = service._id;
+        }
     }
 }
 </script>
 
 <template>
     <div>
-        <service-stat @click="handleServiceSelect(s)" v-for="s in services" :service="s"/>
+        <service-stat v-for="s in services"
+                      @click="handleServiceSelect(s)"
+                      :class="['border border-neutral cursor-pointer',  {'!border-primary': value === s._id}]"
+                      :service="s"/>
     </div>
 </template>
 
