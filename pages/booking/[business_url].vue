@@ -6,6 +6,7 @@ import type {Company} from "~/interfaces/main-types";
 import {bookingFormValidationSchema} from '~/validations'
 import BookServiceSelect from "~/components/booking/BookServiceSelect.vue";
 import InputText from "~/components/inputs/InputText.vue";
+import {getUnixTime} from "date-fns";
 
 const {$api} = useNuxtApp();
 const {addZero} = useUtils();
@@ -25,10 +26,13 @@ const { handleSubmit, errors } = useForm({
 
 const {value: date} = useField<Date | undefined>('date');
 const {value: time} = useField<[number, number]>('time');
-const step = ref(0)
+const step = ref(0);
+const loading = ref(false);
+const confirmedReservation = ref<any>(null)
 
 
 const handleNextStep = () => {
+    if(step.value < 3)
     step.value++
 }
 
@@ -45,6 +49,11 @@ const stepInformation = computed(() => {
                 title: 'Please select a day and time',
                 btnTitle: 'Next Step'
             };
+        case 3:
+            return {
+                title: 'Successful Reservation',
+                btnTitle: 'Change My Reservation'
+            }
         default:
             return {
                 title: 'Please add your information',
@@ -61,13 +70,39 @@ const services = computed(() => {
 })
 
 const handleReserve = handleSubmit((bookingInfo) => {
-    console.log(bookingInfo, 'bookingInfo')
+    const {time,...rest} = bookingInfo;
+    // console.log(fromUnixTime(1718882100));
+    // return;
+    if(time && date.value){
+        const dateTime = date.value.setHours(time[0], time[1])
+        const unixTime = JSON.stringify(getUnixTime(dateTime))
+        makeReservation({
+           ...rest,
+           date: unixTime,
+           time: unixTime,
+        })
+    }
 })
+
+const makeReservation = async (body: any) => {
+    try {
+        loading.value = true;
+        const data = await $api('/reserve', {
+            method: 'POST',
+            body
+        })
+        confirmedReservation.value = data
+        step.value++;
+    } catch (e) {
+        //
+    } finally {
+        loading.value = false;
+    }
+}
 </script>
 
 <template>
     <div class="flex justify-center items-center p-10">
-        {{errors}}
         <div class="max-w-screen-sm w-full">
             <div class="card bg-base-100 shadow-xl">
                 <form class="card-body"
@@ -85,7 +120,6 @@ const handleReserve = handleSubmit((bookingInfo) => {
                     <BookServiceSelect v-show="step === 0" name="service_id" :services="services"/>
                     <div v-show="step === 1" class="grid grid-cols-9 justify-center">
                         <div class="col-span-6">
-                            {{time}}
                             <DatePicker v-model="date"
                                         class="p-0 m-0"
                                         :min-date="new Date()"
@@ -111,8 +145,18 @@ const handleReserve = handleSubmit((bookingInfo) => {
                         <InputText name="email"/>
                         <InputText name="phone"/>
                     </div>
-                    <button v-if="step < 2" @click="handleNextStep" class="btn btn-primary mt-5" type="button">{{stepInformation.btnTitle}}</button>
-                    <button v-else class="btn btn-primary mt-5" type="submit">Reserve</button>
+                    <div v-if="step === 3" class="flex flex-col gap-3">
+                        <div v-for="(info, key) in confirmedReservation">
+                            {{key}}: <b>{{info}}</b>
+                        </div>
+                    </div>
+                    <button v-if="step !== 2" @click="handleNextStep" class="btn btn-primary mt-5" type="button">{{stepInformation.btnTitle}}</button>
+                    <button v-else class="btn btn-primary mt-5" type="submit">
+                        <span v-if="loading" class="loading loading-bars loading-md"></span>
+                        <span v-else>
+                            Reserve
+                        </span>
+                    </button>
                 </form>
             </div>
         </div>

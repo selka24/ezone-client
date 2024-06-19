@@ -53,14 +53,15 @@ export const bookingFormValidationSchema = yup.object({
     "name": yup.string().required(),
     "phone": yup.number().required(),
     "email": yup.string().required(),
-    "time": yup.string().transform(val => {
-        console.log(val, 'valaaaaaaa')
-        const [hour, minutes] = val
-        const date = new Date();
-        date.setHours(hour, minutes)
-        const finalVal = JSON.stringify(getUnixTime(date));
-        console.log('finalVal', finalVal)
-        return finalVal;
-    }).required(),
+    "time": yup.array().of(yup.number().required()).length(2),
+    // "time": yup.string().transform(val => {
+    //     console.log(val, 'valaaaaaaa')
+    //     const [hour, minutes] = val
+    //     const date = new Date();
+    //     date.setHours(hour, minutes)
+    //     const finalVal = JSON.stringify(getUnixTime(date));
+    //     console.log('finalVal', finalVal)
+    //     return finalVal;
+    // }).required(),
     "date": yup.string().transform(val => JSON.stringify(getUnixTime(new Date(val)))).required(),
 })
