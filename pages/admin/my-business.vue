@@ -2,10 +2,15 @@
 import InputText from "~/components/inputs/InputText.vue";
 import {companyValidationSchema} from '~/validations'
 import InputToggle from "~/components/inputs/InputToggle.vue";
+import ServicesForm from "~/components/admin/createForm/ServicesForm.vue";
+import ServiceStat from "~/components/admin/services/ServiceStat.vue";
+import ServiceInputGroup from "~/components/inputs/ServiceInputGroup.vue";
+import type {Service} from "~/interfaces/main-types";
 
 const companyStore = useCompanyStore();
-const {company} = storeToRefs(companyStore);
+const {company, services} = storeToRefs(companyStore);
 const editMode = ref(false);
+const {$api} = useNuxtApp();
 
 const initialValues = computed(() => {
     return company || {}
@@ -15,6 +20,20 @@ const {handleSubmit} = useForm({
     validationSchema: companyValidationSchema,
     initialValues: initialValues.value
 })
+
+companyStore.actGetAllService();
+
+const handleNewService = async (newService: Service) => {
+    try{
+        await $api('/service/create', {
+            method: 'POST',
+            body: newService
+        })
+    } catch (e) {
+
+    }
+    console.log(newService)
+}
 
 const updateCompany = handleSubmit((values) => {
 
@@ -81,6 +100,34 @@ const updateCompany = handleSubmit((values) => {
                 </div>
             </div>
         </form>
+        <div class="divider divider-neutral"></div>
+        <div class="flex flex-col">
+            <div class="flex justify-between gap-10 lg:gap-20">
+                <div class="prose min-w-max">
+                    <h3>
+                        Services
+                    </h3>
+                    <p>
+                        View or change the your services
+                    </p>
+                </div>
+                <div class="flex flex-wrap gap-5">
+                    <div v-for="(service, idx) in services"
+                         class="relative"
+                         :key="service.title + service.price">
+                        <fai
+                            icon="circle-xmark"
+                            class="absolute cursor-pointer -right-2 text-error text-xl" />
+                        <ServiceStat :service="service"/>
+                    </div>
+                </div>
+            </div>
+            <div class="grid grid-cols-6 mt-6">
+                <div class="col-span-6 md:col-span-5">
+                    <ServiceInputGroup @serviceSubmit="handleNewService"/>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 

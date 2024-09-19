@@ -1,5 +1,5 @@
 import {defineStore, acceptHMRUpdate} from 'pinia';
-import type {Company, CreateCompany, Employee} from "~/interfaces/main-types";
+import type {Company, CreateCompany, Employee, Service} from "~/interfaces/main-types";
 
 export const useCompanyStore = defineStore('companyStore', () => {
     const {$api} = useNuxtApp();
@@ -19,6 +19,16 @@ export const useCompanyStore = defineStore('companyStore', () => {
         lazy: true,
         watch: [companyProfileId]
     })
+
+    const services = ref<Service[]>([]);
+
+    const actGetAllService = async () => {
+        try {
+            services.value = await $api<Service[]>(`/services/company/${companyProfileId.value}`);
+        } catch (e) {
+
+        }
+    }
 
     // watch(() => authStore.authUser, (newVal) => {
     //     if(!newVal?.companyProfileId){
@@ -80,6 +90,7 @@ export const useCompanyStore = defineStore('companyStore', () => {
 
     return {
         company,
+        services,
         companyProfileId,
         creatingCompany,
         pending,
@@ -87,6 +98,7 @@ export const useCompanyStore = defineStore('companyStore', () => {
         actUpdateCompany,
         status,
         actGetMyCompany,
+        actGetAllService,
     }
 })
 
