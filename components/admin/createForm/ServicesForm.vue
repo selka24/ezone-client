@@ -4,7 +4,10 @@ import {serviceValidationSchema} from "~/validations";
 import InputText from "~/components/inputs/InputText.vue";
 import InputDuration from "~/components/inputs/InputDuration.vue";
 import ServiceStat from "~/components/admin/services/ServiceStat.vue";
+import {useCompanyStore} from "~/stores/companyStore";
 
+const {$api} = useNuxtApp();
+const companyStore = useCompanyStore()
 const emit = defineEmits<{
     servicesSubmit: [Service[]]
 }>()
@@ -20,10 +23,19 @@ const handleRemoveService = (idx: number) => {
     services.value.splice(idx, 1);
 }
 
-const handleServicesSubmit = handleSubmit((values) => {
+const handleServicesSubmit = handleSubmit(async (values) => {
     console.log(values)
-    services.value.push(values);
-    resetForm();
+    try {
+        const data = await $api<Service>('/service/create', {
+            method: 'POST',
+            body: {...values, company: companyStore.company?._id}
+        })
+
+        services.value.push(data);
+        resetForm();
+    } catch (e) {
+
+    }
 })
 
 const handleContinue = () => {

@@ -58,7 +58,7 @@ export interface Service {
 
 export interface Employee {
     _id: string,
-    company_id: string
+    company: string
     name: string
     lastname: string
     job_title: string

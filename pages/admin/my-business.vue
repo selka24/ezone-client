@@ -2,7 +2,7 @@
 import InputText from "~/components/inputs/InputText.vue";
 import {companyValidationSchema} from '~/validations'
 import InputToggle from "~/components/inputs/InputToggle.vue";
-import ServicesForm from "~/components/admin/createForm/ServicesForm.vue";
+// import ServicesForm from "~/components/admin/createForm/ServicesForm.vue";
 import ServiceStat from "~/components/admin/services/ServiceStat.vue";
 import ServiceInputGroup from "~/components/inputs/ServiceInputGroup.vue";
 import type {Service} from "~/interfaces/main-types";
@@ -24,15 +24,29 @@ const {handleSubmit} = useForm({
 companyStore.actGetAllService();
 
 const handleNewService = async (newService: Service) => {
+    // console.log()
     try{
         await $api('/service/create', {
             method: 'POST',
-            body: newService
+            body: {...newService, company: companyStore.company?._id}
         })
+
+        await companyStore.actGetAllService();
     } catch (e) {
 
     }
     console.log(newService)
+}
+
+const handleDeleteService = async (id: string | undefined) => {
+    try {
+        await $api(`/service/${id}`, {
+            method: "DELETE"
+        })
+        await companyStore.actGetAllService();
+    } catch (e) {
+
+    }
 }
 
 const updateCompany = handleSubmit((values) => {
@@ -111,20 +125,21 @@ const updateCompany = handleSubmit((values) => {
                         View or change the your services
                     </p>
                 </div>
-                <div class="flex flex-wrap gap-5">
-                    <div v-for="(service, idx) in services"
-                         class="relative"
-                         :key="service.title + service.price">
-                        <fai
-                            icon="circle-xmark"
-                            class="absolute cursor-pointer -right-2 text-error text-xl" />
-                        <ServiceStat :service="service"/>
-                    </div>
-                </div>
             </div>
             <div class="grid grid-cols-6 mt-6">
                 <div class="col-span-6 md:col-span-5">
                     <ServiceInputGroup @serviceSubmit="handleNewService"/>
+                </div>
+                <div class="flex flex-wrap gap-5 col-span-6 mt-10">
+                    <div v-for="(service, idx) in services"
+                         class="relative"
+                         :key="service.title + service.price">
+                        <fai
+                            @click="handleDeleteService(service?._id)"
+                            icon="circle-xmark"
+                            class="absolute cursor-pointer -right-2 text-error text-xl" />
+                        <ServiceStat :service="service"/>
+                    </div>
                 </div>
             </div>
         </div>

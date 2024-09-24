@@ -18,7 +18,7 @@ const employees = ref<Employee[]>([]);
 const {handleSubmit, resetForm} = useForm<Employee>({
     validationSchema: employeeValidationSchema,
     initialValues: {
-        company_id: props.companyId
+        company: props.companyId
     }
 })
 
