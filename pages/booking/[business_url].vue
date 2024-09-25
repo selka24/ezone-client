@@ -2,21 +2,30 @@
 import { DatePicker } from 'v-calendar';
 import 'v-calendar/style.css';
 import BookTimePicket from "~/components/booking/BookTimePicket.vue";
-import type {Company} from "~/interfaces/main-types";
+import type {Company, Service} from "~/interfaces/main-types";
 import {bookingFormValidationSchema} from '~/validations'
 import BookServiceSelect from "~/components/booking/BookServiceSelect.vue";
 import InputText from "~/components/inputs/InputText.vue";
 import {getUnixTime} from "date-fns";
+import moment from "moment";
 
 const {$api} = useNuxtApp();
 const {addZero} = useUtils();
 const route = useRoute();
 
-const {data: company, pending} = await useAsyncData<Company>('bookCompany', () => $api(`/company/${route.params.business_url}`, {
+const companyId = route.params.business_url;
+
+const {data: company, pending} = await useAsyncData<Company>('bookCompany', () => $api(`/company/${companyId}`, {
     method: 'GET',
 }))
 
-const { handleSubmit, errors } = useForm({
+const {data: services} = await useAsyncData<Service[]>('allServices', () => $api(`/services/company/${companyId}`, {
+    method: "GET"
+}))
+
+console.log(company, 'companyyyy')
+
+const { handleSubmit, errors, values: reservationInfo } = useForm({
     validationSchema: toTypedSchema(bookingFormValidationSchema),
     initialValues: {
         //@ts-ignore
@@ -32,8 +41,46 @@ const confirmedReservation = ref<any>(null)
 
 
 const handleNextStep = () => {
-    if(step.value < 3)
-    step.value++
+    if(step.value < 3) {
+        if(step.value === 1){
+            getAvailableBookings();
+        }
+        step.value++
+    }
+}
+
+const {$apiService} = useNuxtApp();
+
+const dateTime = computed(() => {
+    if(reservationInfo.date && reservationInfo.time){
+        const date = moment(reservationInfo.date);
+        const [hour, minute] = reservationInfo.time;
+        date.hour(hour).minute(minute);
+        return date.utc().format("YYYY-MM-DDTHH:mm:ss.SSSZ");
+    }
+    return null;
+})
+
+const getAvailableBookings = async () => {
+    console.log({
+        service: reservationInfo.service_id,
+        company: company.value?._id,
+        date: dateTime.value
+    })
+    // return;
+    try {
+        const data = $apiService.post('bookings/available', {
+            body: {
+                service: reservationInfo.service_id,
+                company: company.value?._id,
+                date: dateTime.value
+            }
+        })
+
+        console.log(data)
+    } catch (e) {
+
+    }
 }
 
 
@@ -62,12 +109,12 @@ const stepInformation = computed(() => {
     }
 })
 
-const services = computed(() => {
-    if(company.value?.employees?.[0]){
-        return company.value?.employees?.[0].services
-    }
-    return []
-})
+// const services = computed(() => {
+//     if(company.value?.employees?.[0]){
+//         return company.value?.employees?.[0].services
+//     }
+//     return []
+// })
 
 const handleReserve = handleSubmit((bookingInfo) => {
     const {time,...rest} = bookingInfo;
@@ -117,7 +164,7 @@ const makeReservation = async (body: any) => {
                         <h4 class="font-semibold text-lg">{{stepInformation.title}}</h4>
                         <div class="divider divider-neutral my-5 w-full"></div>
                     </div>
-                    <BookServiceSelect v-show="step === 0" name="service_id" :services="services"/>
+                    <BookServiceSelect v-if="services" v-show="step === 0" name="service_id" :services="services"/>
                     <div v-show="step === 1" class="grid grid-cols-9 justify-center">
                         <div class="col-span-6">
                             <DatePicker v-model="date"

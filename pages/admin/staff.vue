@@ -1,5 +1,11 @@
 <script setup lang="ts">
 import StaffTable from "~/components/admin/staff/StaffTable.vue";
+import StaffForm from "~/components/admin/createForm/StaffForm.vue";
+import StaffDefaultForm from "~/components/inputs/StaffDefaultForm.vue";
+
+const companyStore = useCompanyStore();
+
+
 </script>
 
 <template>
@@ -21,7 +27,7 @@ import StaffTable from "~/components/admin/staff/StaffTable.vue";
                         <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
                     </form>
                     <h3 class="font-bold text-lg">Hello!</h3>
-                    <p class="py-4">Press ESC key or click on ✕ button to close</p>
+                    <StaffDefaultForm class="grid grid-cols-2 modalForm"/>
                 </div>
             </dialog>
         </div>
@@ -29,6 +35,8 @@ import StaffTable from "~/components/admin/staff/StaffTable.vue";
     </div>
 </template>
 
-<style scoped>
-
+<style lang="postcss">
+.modalForm > * {
+    @apply col-span-2 !important;
+}
 </style>

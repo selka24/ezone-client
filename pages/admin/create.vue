@@ -97,12 +97,10 @@ const handleStaffAssign = async () => {
                 <ServicesForm v-else-if="currStep === 1"
                               @services-submit="handleCompanyServices"
                               :key="1"/>
-                <StaffForm v-else-if="company?._id && currStep === 2"
+                <StaffForm v-else-if="currStep === 2"
                            @employeesSubmit="actCreateEmployee"
                            @continue="handleStaffAssign"
-                           :company-id="company?._id"
-                           :key="2"
-                           :services="companyServices"/>
+                           :key="2"/>
             </transition>
             <span v-show="companyStore.creatingCompany" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 loading loading-bars loading-lg"></span>
         </div>
