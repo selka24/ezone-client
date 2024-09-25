@@ -51,6 +51,7 @@ export interface WorkDay {
 export interface Service {
     "title": string
     "id"?: string
+    "company"?: string
     "_id"?: string
     "duration": number
     "price": number

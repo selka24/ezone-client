@@ -1,42 +1,41 @@
 <script setup lang="ts">
 import type {Service} from "~/interfaces/main-types";
-import {serviceValidationSchema} from "~/validations";
-import InputText from "~/components/inputs/InputText.vue";
-import InputDuration from "~/components/inputs/InputDuration.vue";
+// import {serviceValidationSchema} from "~/validations";
+// import InputText from "~/components/inputs/InputText.vue";
+// import InputDuration from "~/components/inputs/InputDuration.vue";
 import ServiceStat from "~/components/admin/services/ServiceStat.vue";
-import {useCompanyStore} from "~/stores/companyStore";
+import ServiceInputGroup from "~/components/inputs/ServiceInputGroup.vue";
 
-const {$api} = useNuxtApp();
-const companyStore = useCompanyStore()
+const companyStore = useCompanyStore();
 const emit = defineEmits<{
     servicesSubmit: [Service[]]
 }>()
+const companyId = companyStore.company?._id
+
 const services = ref<Service[]>([]);
-const {handleSubmit, resetForm} = useForm<Service>({
-    validationSchema: serviceValidationSchema,
-    initialValues: {
-        duration: 0
-    }
-})
+const {$apiService} = useNuxtApp();
+// const {handleSubmit, resetForm} = useForm<Service>({
+//     validationSchema: serviceValidationSchema,
+//     initialValues: {
+//         duration: 0
+//     }
+// })
 
 const handleRemoveService = (idx: number) => {
     services.value.splice(idx, 1);
 }
 
-const handleServicesSubmit = handleSubmit(async (values) => {
-    console.log(values)
+const handleServicesSubmit = async (newService: Service) => {
     try {
-        const data = await $api<Service>('/service/create', {
-            method: 'POST',
-            body: {...values, company: companyStore.company?._id}
+        const data: any = await $apiService.post('/service/create', {
+          body: {...newService, company: companyId}
         })
-
-        services.value.push(data);
-        resetForm();
+        console.log(data, 'dataaa')
+        services.value.push({...newService, company: companyId, _id: data._id})
     } catch (e) {
 
     }
-})
+}
 
 const handleContinue = () => {
     emit('servicesSubmit', services.value);
@@ -45,14 +44,7 @@ const handleContinue = () => {
 
 <template>
     <div class="card-body">
-        <form @submit.prevent="handleServicesSubmit" novalidate>
-            <div class="grid grid-cols-10 gap-5 w-full">
-                <InputText name="title" class="col-span-4" :attributes="{placeholder: 'Emri i shërbimit'}"/>
-                <InputDuration name="duration" class="col-span-2"/>
-                <InputText name="price" class="col-span-2" :attributes="{placeholder: 'ALL', type: 'number'}"/>
-                <button class="btn btn-outline btn-primary mt-9 mb-auto col-span-2">Add</button>
-            </div>
-        </form>
+        <ServiceInputGroup @serviceSubmit="handleServicesSubmit" />
         <div class="divider divider-neutral"></div>
         <div class="flex flex-wrap gap-5">
             <div v-for="(service, idx) in services"

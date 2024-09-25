@@ -1,5 +1,4 @@
 <script setup lang="ts">
-
 import StaffTable from "~/components/admin/staff/StaffTable.vue";
 </script>
 

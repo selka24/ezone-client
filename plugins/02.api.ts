@@ -32,10 +32,22 @@ export default defineNuxtPlugin(() => {
         },
     })
 
+    const apiService = {
+        post: (url: string, {body}: {body: any}) => api(url, {
+            method: 'POST',
+            body
+        }),
+        get: (url: string, params?: any) => api(url, {
+            method: 'GET',
+            ...(params ? {params} : {})
+        })
+    }
+
     // Expose to useNuxtApp().$api
     return {
         provide: {
-            api
+            api,
+            apiService
         }
     }
 })

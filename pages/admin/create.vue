@@ -90,21 +90,20 @@ const handleStaffAssign = async () => {
         <Stepper :steps="steps" :curr-step="currStep" class="max-w-screen-md w-full"/>
 
         <div class="card shrink-0 w-full max-w-screen-sm shadow-2xl bg-base-100">
-            <transition-group name="page" mode="out-in">
-                <MainInfoForm v-show="currStep === 0"
+            <transition name="page" mode="out-in">
+                <MainInfoForm v-if="currStep === 0"
                               @form-submit="handleCreateCompany"
                               :key="0"/>
-                <ServicesForm v-show="currStep === 1"
+                <ServicesForm v-else-if="currStep === 1"
                               @services-submit="handleCompanyServices"
                               :key="1"/>
-                <StaffForm v-if="company?._id"
-                           v-show="currStep === 2"
+                <StaffForm v-else-if="company?._id && currStep === 2"
                            @employeesSubmit="actCreateEmployee"
                            @continue="handleStaffAssign"
                            :company-id="company?._id"
                            :key="2"
                            :services="companyServices"/>
-            </transition-group>
+            </transition>
             <span v-show="companyStore.creatingCompany" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 loading loading-bars loading-lg"></span>
         </div>
     </div>
