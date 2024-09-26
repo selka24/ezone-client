@@ -29,12 +29,36 @@ export const serviceValidationSchema = yup.object({
 })
 
 export const employeeValidationSchema = yup.object({
-    "company_id": yup.string().nullable(),
+    "company": yup.string().nullable(),
     "name": yup.string().required(),
     "lastname": yup.string().required(),
     "job_title": yup.string().required(),
-    services: yup.array().of(serviceValidationSchema).nullable()
+    services: yup.array().of(yup.string()).required(),
+    working_days: yup.array().of(yup.object({
+        day: yup.string().oneOf(['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']),
+        start_time: yup.number(),
+        end_time: yup.number().when('start_time', ([start_time], schema) => {
+            return schema.moreThan(start_time);
+        }, 'End time can\'t be greater than the end time'),
+    })),
 })
+
+export const testValidation = async () => {
+    const validation = await employeeValidationSchema.validate({
+        company: 'company',
+        name: 'name',
+        lastname: 'lastname',
+        job_title: 'job_title',
+        services: [123],
+        working_days: [{
+            day: 'Monday',
+            start_time: 12345678,
+            end_time: 12345688,
+        }],
+    })
+
+    console.log(validation, 'validation validation')
+}
 
 
 export const mainInfoValidationSchema = yup.object(mainInfoObject)

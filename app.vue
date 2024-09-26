@@ -8,6 +8,9 @@
 <script setup lang="ts">
 const authStore = useAuthStore();
 const companyStore = useCompanyStore();
+import {testValidation} from '~/validations'
+
+testValidation();
 
 if(authStore.authenticated){
     console.log('getting')
