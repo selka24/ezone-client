@@ -31,7 +31,7 @@ export interface CompanyMainInfo {
     location: string
 }
 
-enum Days {
+export enum Days {
     monday = "monday",
     tuesday = "tuesday",
     wednesday = "wednesday",
@@ -43,8 +43,8 @@ enum Days {
 
 export interface WorkDay {
     day: Days,
-    start_time: string
-    end_time: string
+    start_time: string | number
+    end_time: string | number
 }
 
 

@@ -2,6 +2,7 @@
 import StaffTable from "~/components/admin/staff/StaffTable.vue";
 import StaffForm from "~/components/admin/createForm/StaffForm.vue";
 import StaffDefaultForm from "~/components/inputs/StaffDefaultForm.vue";
+import WeekdayPicker from "~/components/ui/WeekdayPicker.vue";
 
 const companyStore = useCompanyStore();
 
