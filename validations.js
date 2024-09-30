@@ -1,3 +1,6 @@
+// @ts-ignore
+// @ts-ignore
+
 import * as yup from 'yup';
 import {getUnixTime} from 'date-fns';
 
@@ -35,11 +38,11 @@ export const employeeValidationSchema = yup.object({
     "job_title": yup.string().required(),
     services: yup.array().of(yup.string()).required(),
     working_days: yup.array().of(yup.object({
-        day: yup.string().oneOf(['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']),
+        day: yup.string().oneOf(['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']),
         start_time: yup.number(),
         end_time: yup.number().when('start_time', ([start_time], schema) => {
-            return schema.moreThan(start_time);
-        }, 'End time can\'t be greater than the end time'),
+            return schema.moreThan(start_time, 'End time should be greater than the start time');
+        })
     })),
 })
 
@@ -51,7 +54,7 @@ export const testValidation = async () => {
         job_title: 'job_title',
         services: [123],
         working_days: [{
-            day: 'Monday',
+            day: 'monday',
             start_time: 12345678,
             end_time: 12345688,
         }],

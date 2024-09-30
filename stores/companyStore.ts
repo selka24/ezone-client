@@ -20,15 +20,25 @@ export const useCompanyStore = defineStore('companyStore', () => {
         watch: [companyProfileId]
     })
 
-    const services = ref<Service[]>([]);
+    // const services = ref<Service[]>([]);
 
-    const actGetAllService = async () => {
-        try {
-            services.value = await $api<Service[]>(`/services/company/${companyProfileId.value}`);
-        } catch (e) {
 
-        }
-    }
+    const {data: services, refresh: actGetAllService} = useAsyncData<Service[]>('allServices',  () => $api(`/services/company/${companyProfileId.value}`, {
+        method: 'GET',
+        // signal: abortController.signal,
+    }), {
+        immediate: false,
+        lazy: true,
+        watch: [companyProfileId]
+    })
+
+    // const actGetAllService = async () => {
+    //     try {
+    //         return await $api<Service[]>(`/services/company/${companyProfileId.value}`);
+    //     } catch (e) {
+    //
+    //     }
+    // }
 
     // watch(() => authStore.authUser, (newVal) => {
     //     if(!newVal?.companyProfileId){

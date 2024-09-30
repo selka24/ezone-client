@@ -1,11 +1,27 @@
 <script setup lang="ts">
 import StaffTable from "~/components/admin/staff/StaffTable.vue";
-import StaffForm from "~/components/admin/createForm/StaffForm.vue";
+// import StaffForm from "~/components/admin/createForm/StaffForm.vue";
 import StaffDefaultForm from "~/components/inputs/StaffDefaultForm.vue";
-import WeekdayPicker from "~/components/ui/WeekdayPicker.vue";
+import type {Employee} from "~/interfaces/main-types";
+import moment from "moment";
+// import WeekdayPicker from "~/components/ui/WeekdayPicker.vue";
 
 const companyStore = useCompanyStore();
+const employeeStore = useEmployeeStore();
 
+const handleEmployeeCreate = (employee: Employee) => {
+    employeeStore.actCreateEmployee({
+            ...employee,
+            working_days: employee.working_days.map(({day, start_time, end_time}) => {
+                return {
+                    day,
+                    start_time:  moment().startOf('day').add(start_time, 'minutes').valueOf(),
+                    end_time:  moment().startOf('day').add(end_time, 'minutes').valueOf(),
+                }
+            })
+        }
+    )
+}
 
 </script>
 
@@ -28,7 +44,7 @@ const companyStore = useCompanyStore();
                         <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
                     </form>
                     <h3 class="font-bold text-lg">Hello!</h3>
-                    <StaffDefaultForm class="grid grid-cols-2 modalForm"/>
+                    <StaffDefaultForm class="grid grid-cols-2 modalForm" @employeeSubmit="handleEmployeeCreate"/>
                 </div>
             </dialog>
         </div>

@@ -21,7 +21,7 @@ const companyId = computed(() => companyStore.company?._id || '');
 const services = computed(() => companyStore.services);
 const time = ref([0,0]);
 
-const {handleSubmit, resetForm, values} = useForm<Employee>({
+const {handleSubmit, resetForm, values, errors} = useForm<Employee>({
     validationSchema: employeeValidationSchema,
     initialValues: {
         company: companyId.value,
@@ -36,7 +36,7 @@ const handleEmployeeSubmit = handleSubmit((employee) => {
 const getDefaultWorkDay = () => {
     if(selectedDays.value.length){
         return selectedDays.value.map(day => {
-            const foundWorkDay = values.working_days.find((workDay) => workDay.day === day);
+            const foundWorkDay = values.working_days?.find((workDay) => workDay.day === day);
             if(foundWorkDay)
                 return foundWorkDay;
             return {
@@ -64,39 +64,52 @@ watch(selectedDays, () => {
     <form @submit.prevent="handleEmployeeSubmit"
           novalidate
           class="gap-x-5">
-        {{values}}
+        {{errors}}
         <InputText name="name" class="col-span-2" :attributes="{placeholder: 'Enter staff name'}"/>
         <InputText name="lastname" class="col-span-2" :attributes="{placeholder: 'Enter staff last name'}"/>
         <InputText name="job_title" class="col-span-2"  :attributes="{placeholder: 'Enter job description'}"/>
-        <InputSelect :options="services"
+        <InputSelect :options="services || []"
                      :multiple="true"
                      display-key="title"
+                     value-key="_id"
                      class="col-span-4"
                      :attributes="{placeholder: 'Select services for this staff'}"
                      name="services"/>
-        <WeekdayPicker v-model="selectedDays"/>
-        <div v-for="(day, idx) in selectedDays" :key="day + '-inputGroup'">
-            <InputText :name="`working_days[${idx}].day`"
-                       class="hidden"/>
-            <div class="col-span-full grid grid-cols-2 gap-5">
-                <InputDuration
-                    class="col-span-1"
-                    :name="`working_days[${idx}].start_time`"
-                    :attributes="{
+        <div class="flex flex-col gap-5">
+            <label class="form-control w-full">
+                <div class="label mb-3">Select working days</div>
+                <WeekdayPicker v-model="selectedDays" class="justify-between"/>
+            </label>
+            <div class="grid grid-cols-1 gap-5">
+                <div v-for="(day, idx) in selectedDays" :key="day + '-inputGroup'"
+                     class="shadow-2xl p-3 rounded">
+                    <div class="label capitalize text-primary">{{day}}</div>
+                    <InputText :name="`working_days[${idx}].day`"
+                               class="hidden"/>
+                    <div class="grid grid-cols-11 gap-5 items-center">
+                        <InputDuration
+                            class="col-span-5"
+                            :name="`working_days[${idx}].start_time`"
+                            :attributes="{
                         hours: companyHours,
                         label: 'Start time',
                         minutes: [0]
                     }"
-                />
-                <InputDuration
-                    class="col-span-1"
-                    :name="`working_days[${idx}].end_time`"
-                    :attributes="{
+                        />
+                        <div class="justify-center flex mt-7">
+                            -
+                        </div>
+                        <InputDuration
+                            class="col-span-5"
+                            :name="`working_days[${idx}].end_time`"
+                            :attributes="{
                         hours: companyHours,
                         label: 'End time',
                         minutes: [0]
                     }"
-                />
+                        />
+                    </div>
+                </div>
             </div>
         </div>
         <div class="col-span-2">

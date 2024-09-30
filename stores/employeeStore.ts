@@ -1,4 +1,5 @@
 import {defineStore, acceptHMRUpdate} from 'pinia';
+import type {Employee} from "~/interfaces/main-types";
 
 export const useEmployeeStore = defineStore('employeeStore', () => {
     const {$apiService} = useNuxtApp();
@@ -14,8 +15,15 @@ export const useEmployeeStore = defineStore('employeeStore', () => {
         }
     }
 
+    const actCreateEmployee = async (employee: Employee) => {
+        $apiService.post('/employee/create', {
+            body: employee
+        })
+    }
+
     return {
         allEmployees,
         actGetAllEmployees,
+        actCreateEmployee,
     }
 })

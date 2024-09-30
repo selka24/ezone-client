@@ -17,6 +17,7 @@ const daysArray = Object.values(Days).map((day) => {
 });
 
 const handleDayChange = (e: Event) => {
+    console.log(e.target)
     const target = e.target as HTMLInputElement;
     const value = target.value as Days;
     const checked = target.checked;
@@ -38,10 +39,8 @@ const isDaySelected = (day: Days) => {
     <div class="flex align-items-center gap-5">
         <label v-for="({day, short}) in daysArray"
                :class="['badge badge-lg uppercase cursor-pointer', {'badge-primary': isDaySelected(day)}]"
-               :for="day"
                :key="day">
             <input type="checkbox"
-                   hidden
                    :id="day"
                    :checked="isDaySelected(day)"
                    @change="handleDayChange"

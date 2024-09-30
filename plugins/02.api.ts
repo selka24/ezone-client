@@ -26,8 +26,7 @@ export default defineNuxtPlugin(() => {
             if (response.status === 401) {
                 await navigateTo('/login')
             } else {
-                // console.log( ,'daaaaaaaa')
-                if(!process.server) $toast.error(response._data)
+                if(!process.server) $toast.error(response._data?.message || 'Something went wrong!')
             }
         },
     })

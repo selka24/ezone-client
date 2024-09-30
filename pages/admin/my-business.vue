@@ -21,7 +21,6 @@ const {handleSubmit} = useForm({
     initialValues: initialValues.value
 })
 
-companyStore.actGetAllService();
 
 const handleNewService = async (newService: Service) => {
     // console.log()
