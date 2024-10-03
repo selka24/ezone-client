@@ -40,12 +40,15 @@ const loading = ref(false);
 const confirmedReservation = ref<any>(null)
 
 
-const handleNextStep = () => {
+const handleNextStep = async () => {
+    let goToNextStep = true;
     if(step.value < 3) {
         if(step.value === 1){
-            getAvailableBookings();
+            goToNextStep = await getAvailableBookings();
         }
-        step.value++
+        console.log('goToNextStep', goToNextStep)
+        if(goToNextStep)
+            step.value++
     }
 }
 
@@ -69,17 +72,17 @@ const getAvailableBookings = async () => {
     })
     // return;
     try {
-        const data = $apiService.post('bookings/available', {
+        const data = await $apiService.post('bookings/available', {
             body: {
                 service: reservationInfo.service_id,
                 company: company.value?._id,
                 date: dateTime.value
             }
         })
-
-        console.log(data)
+        return true
+        console.log(data, 'dataaaaaa')
     } catch (e) {
-
+        return false
     }
 }
 
