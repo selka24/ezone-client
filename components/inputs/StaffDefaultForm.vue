@@ -64,7 +64,6 @@ watch(selectedDays, () => {
     <form @submit.prevent="handleEmployeeSubmit"
           novalidate
           class="gap-x-5">
-        {{errors}}
         <InputText name="name" class="col-span-2" :attributes="{placeholder: 'Enter staff name'}"/>
         <InputText name="lastname" class="col-span-2" :attributes="{placeholder: 'Enter staff last name'}"/>
         <InputText name="job_title" class="col-span-2"  :attributes="{placeholder: 'Enter job description'}"/>

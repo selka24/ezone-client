@@ -17,8 +17,9 @@ const companyServices = ref<Service[]>([])
 const {authUser} = storeToRefs(authStore)
 const router = useRouter();
 
-const handleCompanyServices = (values: Service[]) => {
-    companyServices.value = values;
+const handleCompanyServices = async (values: Service[]) => {
+    // companyServices.value = values;
+    await companyStore.actGetAllService()
     currStep.value++;
 }
 
