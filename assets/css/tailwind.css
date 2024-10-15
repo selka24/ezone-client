@@ -14,4 +14,13 @@
         -ms-overflow-style: none;  /* IE and Edge */
         scrollbar-width: none;  /* Firefox */
     }
+
+    .badge-xl {
+        @apply badge-lg;
+        height: 2.5rem !important;
+    }
+
+    .absolute-center {
+        @apply absolute -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2;
+    }
 }

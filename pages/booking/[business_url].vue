@@ -23,6 +23,8 @@ const {data: services} = await useAsyncData<Service[]>('allServices', () => $api
     method: "GET"
 }))
 
+
+
 console.log(company, 'companyyyy')
 
 const { handleSubmit, errors, values: reservationInfo } = useForm({
@@ -35,16 +37,43 @@ const { handleSubmit, errors, values: reservationInfo } = useForm({
 
 const {value: date} = useField<Date | undefined>('date');
 const {value: time} = useField<[number, number]>('time');
+const {value: selectedTime} = useField<Date>('selectedTime');
 const step = ref(0);
 const loading = ref(false);
 const confirmedReservation = ref<any>(null)
 
+const getAvailableBookings = async () => {
+    console.log({
+        service: reservationInfo.service_id,
+        company: company.value?._id,
+        date: dateTime.value
+    })
+    // return;
+    try {
+        const data = await $apiService.post('bookings/available', {
+            body: {
+                service: reservationInfo.service_id,
+                company: company.value?._id,
+                date: dateTime.value
+            }
+        })
+        console.log(data, 'dataaaaaa')
+        return data
+    } catch (e) {
+        return false
+    }
+}
+
+const {data: availableBookings, status: statusTimes} = await useAsyncData<any>('avlblBook', getAvailableBookings, {
+    immediate: false,
+    watch: [date]
+})
 
 const handleNextStep = async () => {
     let goToNextStep = true;
     if(step.value < 3) {
         if(step.value === 1){
-            goToNextStep = await getAvailableBookings();
+            // goToNextStep = await getAvailableBookings();
         }
         console.log('goToNextStep', goToNextStep)
         if(goToNextStep)
@@ -64,27 +93,7 @@ const dateTime = computed(() => {
     return null;
 })
 
-const getAvailableBookings = async () => {
-    console.log({
-        service: reservationInfo.service_id,
-        company: company.value?._id,
-        date: dateTime.value
-    })
-    // return;
-    try {
-        const data = await $apiService.post('bookings/available', {
-            body: {
-                service: reservationInfo.service_id,
-                company: company.value?._id,
-                date: dateTime.value
-            }
-        })
-        return true
-        console.log(data, 'dataaaaaa')
-    } catch (e) {
-        return false
-    }
-}
+
 
 
 const stepInformation = computed(() => {
@@ -183,10 +192,28 @@ const makeReservation = async (body: any) => {
                         </div>
                         <div class="col-span-2">
                             <div class="input input-bordered flex items-center justify-center mb-4">
-                                {{addZero(time[0])}} : {{addZero(time[1])}}
+                                {{ selectedTime ? moment(selectedTime).format('HH : mm') : '00 : 00' }}
                             </div>
-                            <div class="flex overflow-auto max-h-[270px]">
-                                <BookTimePicket v-model="time" :minutes-interval="5"/>
+                            <div class="overflow-auto h-[240px] h-100 no-scrollbar w-full relative">
+                                <span v-if="statusTimes === 'pending'" class="loading loading-spinner loading-md absolute-center"></span>
+                                <div v-else-if="availableBookings" class="flex flex-col gap-3">
+                                    <label
+                                        v-for="b in availableBookings"
+                                        :for="b.clock.start_time"
+                                        :class="['badge badge-xl w-full uppercase cursor-pointer', (selectedTime !== b.clock.start_time ? 'badge-outline': 'badge-primary')]"
+                                    >
+                                        <input type="radio"
+                                               hidden
+                                               name="timeRadio"
+                                               :id="b.clock.start_time"
+                                               v-model="selectedTime"
+                                               :value="b.clock.start_time">
+                                        <span class="py-1">
+                                        {{ moment(b.clock.start_time).format('HH:mm') }}
+                                    </span>
+                                    </label>
+                                </div>
+                                <div class="bg-base-100 pointer-events-none sticky bottom-0 flex h-24 cursor-default [mask-image:linear-gradient(transparent,#000000)]"></div>
                             </div>
                         </div>
                     </div>

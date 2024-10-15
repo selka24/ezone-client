@@ -6,6 +6,7 @@ import { Days } from "~/interfaces/main-types";
 import {employeeValidationSchema} from "~/validations";
 import InputDuration from "~/components/inputs/InputDuration.vue";
 import WeekdayPicker from "~/components/ui/WeekdayPicker.vue";
+import moment from "moment";
 
 const emit = defineEmits<{
     employeeSubmit: [Employee]
@@ -30,7 +31,16 @@ const {handleSubmit, resetForm, values, errors} = useForm<Employee>({
 })
 
 const handleEmployeeSubmit = handleSubmit((employee) => {
-    emit('employeeSubmit', employee)
+    emit('employeeSubmit', {
+        ...employee,
+        working_days: employee.working_days.map(({day, start_time, end_time}) => {
+            return {
+                day,
+                start_time: `${moment().startOf('day').add(start_time, 'minutes').format('YYYY-MM-DD HH:mm:ss')}`,
+                end_time: `${moment().startOf('day').add(end_time, 'minutes').format('YYYY-MM-DD HH:mm:ss')}`,
+            }
+        })
+    })
 })
 
 const getDefaultWorkDay = () => {
@@ -64,6 +74,7 @@ watch(selectedDays, () => {
     <form @submit.prevent="handleEmployeeSubmit"
           novalidate
           class="gap-x-5">
+        {{values}}
         <InputText name="name" class="col-span-2" :attributes="{placeholder: 'Enter staff name'}"/>
         <InputText name="lastname" class="col-span-2" :attributes="{placeholder: 'Enter staff last name'}"/>
         <InputText name="job_title" class="col-span-2"  :attributes="{placeholder: 'Enter job description'}"/>
@@ -90,9 +101,9 @@ watch(selectedDays, () => {
                             class="col-span-5"
                             :name="`working_days[${idx}].start_time`"
                             :attributes="{
-                        hours: companyHours,
-                        label: 'Start time',
-                        minutes: [0]
+                            hours: companyHours,
+                            label: 'Start time',
+                            minutes: [0]
                     }"
                         />
                         <div class="justify-center flex mt-7">

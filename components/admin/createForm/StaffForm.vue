@@ -1,4 +1,4 @@
-5<script setup lang="ts">
+<script setup lang="ts">
 import type {Employee} from "~/interfaces/main-types";
 import StaffAvatar from "~/components/admin/staff/StaffAvatar.vue";
 import StaffDefaultForm from "~/components/inputs/StaffDefaultForm.vue";

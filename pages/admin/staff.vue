@@ -10,17 +10,8 @@ const companyStore = useCompanyStore();
 const employeeStore = useEmployeeStore();
 
 const handleEmployeeCreate = (employee: Employee) => {
-    employeeStore.actCreateEmployee({
-            ...employee,
-            working_days: employee.working_days.map(({day, start_time, end_time}) => {
-                return {
-                    day,
-                    start_time:  moment().startOf('day').add(start_time, 'minutes').valueOf(),
-                    end_time:  moment().startOf('day').add(end_time, 'minutes').valueOf(),
-                }
-            })
-        }
-    )
+    // console.log(employee)
+    employeeStore.actCreateEmployee(employee)
 }
 
 </script>
