@@ -77,3 +77,9 @@ export interface Company extends CompanyMainInfo{
     workingDays: number[]
     employees?: Employee[]
 }
+
+export interface BookingTime {
+    start_time: string,
+    end_time: string,
+    availableEmpl: string[]
+}

@@ -1,3 +1,5 @@
+import { parseISO, format, setHours, setMinutes } from 'date-fns';
+
 export const useUtils = () => {
 
     const parseJwt = (token: string) => {
@@ -26,8 +28,33 @@ export const useUtils = () => {
         return stringNum;
     }
 
+    const addTimeToDate = (date: string, start_time: string) => {
+
+// Input dates
+//         const date = "2024-10-28 00:00";
+//         const start_time = "2024-10-27T07:30:00.000Z";
+
+// Parse the input dates
+        const parsedDate = parseISO(date.replace(" ", "T")); // Convert to ISO format
+        const parsedStartTime = parseISO(start_time);
+
+// Extract hours and minutes from start_time
+        const hours = parsedStartTime.getUTCHours();
+        const minutes = parsedStartTime.getUTCMinutes();
+
+// Set the extracted hours and minutes to the parsed date
+        const updatedDate = setHours(setMinutes(parsedDate, minutes), hours);
+
+// Format the updated date
+        const formattedDate = format(updatedDate, "yyyy-MM-dd HH:mm");
+
+        console.log(formattedDate);
+        return formattedDate;
+    }
+
     return {
         parseJwt,
+        addTimeToDate,
         addZero,
         displayDuration
     }

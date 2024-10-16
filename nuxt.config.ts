@@ -55,10 +55,11 @@ export default defineNuxtConfig({
                 'plus',
                 'people-group',
                 'chart-simple',
-                'magnifying-glass-chart'
+                'magnifying-glass-chart',
+                'user',
             ],
             regular: [
-                'building'
+                'building',
             ]
         }
     },

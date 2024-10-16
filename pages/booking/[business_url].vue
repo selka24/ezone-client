@@ -1,21 +1,22 @@
 <script setup lang="ts">
 import { DatePicker } from 'v-calendar';
 import 'v-calendar/style.css';
-import BookTimePicket from "~/components/booking/BookTimePicket.vue";
-import type {Company, Service} from "~/interfaces/main-types";
+// import BookTimePicket from "~/components/booking/BookTimePicket.vue";
+import type {BookingTime, Company, Service} from "~/interfaces/main-types";
 import {bookingFormValidationSchema} from '~/validations'
 import BookServiceSelect from "~/components/booking/BookServiceSelect.vue";
 import InputText from "~/components/inputs/InputText.vue";
 import {getUnixTime} from "date-fns";
 import moment from "moment";
+import StaffAvatar from "~/components/admin/staff/StaffAvatar.vue";
 
 const {$api} = useNuxtApp();
-const {addZero} = useUtils();
+const {addTimeToDate} = useUtils();
 const route = useRoute();
 
 const companyId = route.params.business_url;
 
-const {data: company, pending} = await useAsyncData<Company>('bookCompany', () => $api(`/company/${companyId}`, {
+const {data: company} = await useAsyncData<Company>('bookCompany', () => $api(`/company/${companyId}`, {
     method: 'GET',
 }))
 
@@ -25,53 +26,57 @@ const {data: services} = await useAsyncData<Service[]>('allServices', () => $api
 
 
 
-console.log(company, 'companyyyy')
+// console.log(company, 'companyyyy')
 
 const { handleSubmit, errors, values: reservationInfo } = useForm({
     validationSchema: toTypedSchema(bookingFormValidationSchema),
     initialValues: {
+        company: company.value?._id
         //@ts-ignore
-        time: [0,0]
     }
 })
 
-const {value: date} = useField<Date | undefined>('date');
-const {value: time} = useField<[number, number]>('time');
-const {value: selectedTime} = useField<Date>('selectedTime');
+const {value: date} = useField<Date>('date');
+const {value: selectedTime} = useField<BookingTime>('selectedTime');
+const {value: employee} = useField<string>('employee');
 const step = ref(0);
 const loading = ref(false);
 const confirmedReservation = ref<any>(null)
 
+watch(() => date, (newVal, oldVal) => {
+    console.log('i changeeed')
+})
+
 const getAvailableBookings = async () => {
     console.log({
-        service: reservationInfo.service_id,
+        service: reservationInfo.service,
         company: company.value?._id,
-        date: dateTime.value
+        date
     })
-    // return;
     try {
-        const data = await $apiService.post('bookings/available', {
+        const data: any = await $apiService.post('bookings/available', {
             body: {
-                service: reservationInfo.service_id,
+                service: reservationInfo.service,
                 company: company.value?._id,
-                date: dateTime.value
+                date: date.value
             }
         })
         console.log(data, 'dataaaaaa')
         return data
     } catch (e) {
+        console.log(e, 'dataaaaaa')
         return false
     }
 }
 
-const {data: availableBookings, status: statusTimes} = await useAsyncData<any>('avlblBook', getAvailableBookings, {
+const {data: availableBookings, status: statusTimes} = await useAsyncData<BookingTime[]>('avlblBook', getAvailableBookings, {
     immediate: false,
     watch: [date]
 })
 
 const handleNextStep = async () => {
     let goToNextStep = true;
-    if(step.value < 3) {
+    if(step.value < 4) {
         if(step.value === 1){
             // goToNextStep = await getAvailableBookings();
         }
@@ -83,17 +88,22 @@ const handleNextStep = async () => {
 
 const {$apiService} = useNuxtApp();
 
-const dateTime = computed(() => {
-    if(reservationInfo.date && reservationInfo.time){
-        const date = moment(reservationInfo.date);
-        const [hour, minute] = reservationInfo.time;
-        date.hour(hour).minute(minute);
-        return date.utc().format("YYYY-MM-DDTHH:mm:ss.SSSZ");
+// const dateTime = computed(() => {
+//     if(reservationInfo.date && reservationInfo.time){
+//         const date = moment(reservationInfo.date);
+//         const [hour, minute] = reservationInfo.time;
+//         date.hour(hour).minute(minute);
+//         return date.utc().format("YYYY-MM-DDTHH:mm:ss.SSSZ");
+//     }
+//     return null;
+// })
+
+const availableStaff = computed(() => {
+    if(selectedTime.value){
+        return company.value?.employees?.filter((o) => selectedTime.value.availableEmpl?.includes(o._id))
     }
-    return null;
+    return []
 })
-
-
 
 
 const stepInformation = computed(() => {
@@ -108,7 +118,12 @@ const stepInformation = computed(() => {
                 title: 'Please select a day and time',
                 btnTitle: 'Next Step'
             };
-        case 3:
+        case 2:
+            return {
+                title: 'Select a staff member',
+                btnTitle: 'Next Step'
+            };
+        case 4:
             return {
                 title: 'Successful Reservation',
                 btnTitle: 'Change My Reservation'
@@ -129,18 +144,18 @@ const stepInformation = computed(() => {
 // })
 
 const handleReserve = handleSubmit((bookingInfo) => {
-    const {time,...rest} = bookingInfo;
+    //@ts-ignore
+    const {selectedTime: {start_time}, ...rest} = bookingInfo
+    let final = {...rest, date: addTimeToDate(rest.date, start_time)}
+    console.log(final);
+    // const {time,...rest} = bookingInfo;
     // console.log(fromUnixTime(1718882100));
     // return;
-    if(time && date.value){
-        const dateTime = date.value.setHours(time[0], time[1])
-        const unixTime = JSON.stringify(getUnixTime(dateTime))
-        makeReservation({
-           ...rest,
-           date: unixTime,
-           time: unixTime,
-        })
-    }
+    // if(time && date.value){
+    // const dateTime = date.value.setHours(time[0], time[1])
+    // const unixTime = JSON.stringify(getUnixTime(dateTime))
+    makeReservation(final)
+    // }
 })
 
 const makeReservation = async (body: any) => {
@@ -164,6 +179,7 @@ const makeReservation = async (body: any) => {
     <div class="flex justify-center items-center p-10">
         <div class="max-w-screen-sm w-full">
             <div class="card bg-base-100 shadow-xl">
+                {{date}}
                 <form class="card-body"
                       @submit.prevent="handleReserve"
                       novalidate>
@@ -176,7 +192,7 @@ const makeReservation = async (body: any) => {
                         <h4 class="font-semibold text-lg">{{stepInformation.title}}</h4>
                         <div class="divider divider-neutral my-5 w-full"></div>
                     </div>
-                    <BookServiceSelect v-if="services" v-show="step === 0" name="service_id" :services="services"/>
+                    <BookServiceSelect v-if="services" v-show="step === 0" name="service" :services="services"/>
                     <div v-show="step === 1" class="grid grid-cols-9 justify-center">
                         <div class="col-span-6">
                             <DatePicker v-model="date"
@@ -192,24 +208,24 @@ const makeReservation = async (body: any) => {
                         </div>
                         <div class="col-span-2">
                             <div class="input input-bordered flex items-center justify-center mb-4">
-                                {{ selectedTime ? moment(selectedTime).format('HH : mm') : '00 : 00' }}
+                                {{ selectedTime ? moment(selectedTime.start_time).format('HH : mm') : '00 : 00' }}
                             </div>
                             <div class="overflow-auto h-[240px] h-100 no-scrollbar w-full relative">
                                 <span v-if="statusTimes === 'pending'" class="loading loading-spinner loading-md absolute-center"></span>
                                 <div v-else-if="availableBookings" class="flex flex-col gap-3">
                                     <label
                                         v-for="b in availableBookings"
-                                        :for="b.clock.start_time"
-                                        :class="['badge badge-xl w-full uppercase cursor-pointer', (selectedTime !== b.clock.start_time ? 'badge-outline': 'badge-primary')]"
+                                        :for="b.start_time"
+                                        :class="['badge badge-xl w-full uppercase cursor-pointer', (selectedTime?.start_time !== b.start_time ? 'badge-outline': 'badge-primary')]"
                                     >
                                         <input type="radio"
                                                hidden
                                                name="timeRadio"
-                                               :id="b.clock.start_time"
+                                               :id="b.start_time"
                                                v-model="selectedTime"
-                                               :value="b.clock.start_time">
+                                               :value="b">
                                         <span class="py-1">
-                                        {{ moment(b.clock.start_time).format('HH:mm') }}
+                                        {{ moment(b.start_time).format('HH:mm') }}
                                     </span>
                                     </label>
                                 </div>
@@ -217,17 +233,26 @@ const makeReservation = async (body: any) => {
                             </div>
                         </div>
                     </div>
-                    <div v-show="step === 2">
+                    <div v-if="step === 2" class="flex gap-3 flex-wrap">
+                        <staff-avatar
+                            :class="{'border border-primary rounded-lg': employee === empl._id}"
+                            v-for="empl in availableStaff"
+                            @click="() => employee = empl._id"
+                            :key="empl._id"
+                            :staff="empl"
+                        />
+                    </div>
+                    <div v-show="step === 3">
                         <InputText name="name"/>
                         <InputText name="email"/>
                         <InputText name="phone"/>
                     </div>
-                    <div v-if="step === 3" class="flex flex-col gap-3">
+                    <div v-if="step === 4" class="flex flex-col gap-3">
                         <div v-for="(info, key) in confirmedReservation">
                             {{key}}: <b>{{info}}</b>
                         </div>
                     </div>
-                    <button v-if="step !== 2" @click="handleNextStep" class="btn btn-primary mt-5" type="button">{{stepInformation.btnTitle}}</button>
+                    <button v-if="step < 3" @click="handleNextStep" class="btn btn-primary mt-5" type="button">{{stepInformation.btnTitle}}</button>
                     <button v-else class="btn btn-primary mt-5" type="submit">
                         <span v-if="loading" class="loading loading-bars loading-md"></span>
                         <span v-else>

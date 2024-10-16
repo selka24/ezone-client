@@ -7,11 +7,7 @@ defineProps<{staff: Employee}>()
 <template>
     <div class="stat max-w-max shadow-2xl">
         <div class="stat-figure text-secondary">
-            <div class="avatar my-auto">
-                <div class="w-16 rounded-full">
-                    <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
-                </div>
-            </div>
+            <fai icon="user" class="text-[3rem] text-white"/>
         </div>
         <div class="stat-value text-lg font-semibold">
             {{ staff.name }} {{ staff.lastname }}

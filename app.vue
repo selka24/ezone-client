@@ -6,16 +6,16 @@
   </div>
 </template>
 <script setup lang="ts">
-const authStore = useAuthStore();
-const companyStore = useCompanyStore();
-import {testValidation} from '~/validations'
+// const authStore = useAuthStore();
+// const companyStore = useCompanyStore();
+// import {testValidation} from '~/validations'
 
-testValidation();
+// testValidation();
 
-if(authStore.authenticated){
-    console.log('getting')
+// if(authStore.authenticated){
+//     console.log('getting')
     // companyStore.actGetMyCompany();
-}
+// }
 </script>
 <style>
 .page-enter-active,

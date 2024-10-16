@@ -2,7 +2,8 @@
 // @ts-ignore
 
 import * as yup from 'yup';
-import {getUnixTime} from 'date-fns';
+// import {getUnixTime} from 'date-fns';
+import moment from "moment";
 
 const mainInfoObject = {
     "image": yup.string(),
@@ -76,19 +77,11 @@ export const companyValidationSchema = yup.object({
 })
 
 export const bookingFormValidationSchema = yup.object({
-    "service_id": yup.string().required(),
+    "service": yup.string().required(),
+    "company": yup.string().required(),
     "name": yup.string().required(),
     "phone": yup.number().required(),
-    "email": yup.string().required(),
-    "time": yup.array().of(yup.number().required()).length(2),
-    // "time": yup.string().transform(val => {
-    //     console.log(val, 'valaaaaaaa')
-    //     const [hour, minutes] = val
-    //     const date = new Date();
-    //     date.setHours(hour, minutes)
-    //     const finalVal = JSON.stringify(getUnixTime(date));
-    //     console.log('finalVal', finalVal)
-    //     return finalVal;
-    // }).required(),
-    "date": yup.string().transform(val => JSON.stringify(getUnixTime(new Date(val)))).required(),
+    "email": yup.string().email().required(),
+    "employee": yup.string().required(),
+    "date": yup.string().transform(val => moment(val).format('YYYY-MM-DD HH:mm')).required(),
 })
