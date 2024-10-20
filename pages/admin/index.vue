@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import AdminWelcomeScreen from "~/components/admin/AdminWelcomeScreen.vue";
-const companyStore = useCompanyStore();
+import BookingTable from "~/components/admin/BookingTable.vue";
+// const companyStore = useCompanyStore();
 const authStore = useAuthStore();
 
 // onBeforeMount(() => {
@@ -11,6 +12,7 @@ const authStore = useAuthStore();
 <template>
     <div>
         <AdminWelcomeScreen v-if="!authStore.authUser?.companyProfileId"/>
+        <BookingTable />
     </div>
 </template>
 

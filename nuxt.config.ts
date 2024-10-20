@@ -47,6 +47,8 @@ export default defineNuxtConfig({
         icons: {
             solid: [
                 'right-from-bracket',
+                'chevron-left',
+                'chevron-right',
                 'house',
                 'sheet-plastic',
                 'wallet',

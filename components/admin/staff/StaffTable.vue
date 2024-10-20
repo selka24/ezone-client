@@ -37,10 +37,8 @@ employeeStore.actGetAllEmployees();
                 </th>
                 <td>
                     <div class="flex items-center gap-3">
-                        <div class="avatar">
-                            <div class="mask mask-squircle w-12 h-12">
-                                <img src="https://img.daisyui.com/tailwind-css-component-profile-2@56w.png" alt="Avatar Tailwind CSS Component" />
-                            </div>
+                        <div class="mask mask-squircle w-12 h-12 !flex items-center justify-center justify-center">
+                            <fai icon="user" class="text-[2rem] text-white"/>
                         </div>
                         <div>
                             <div class="font-bold">{{ staff.name }} {{staff.lastname}}</div>
@@ -63,13 +61,13 @@ employeeStore.actGetAllEmployees();
             </tr>
             </tbody>
             <!-- foot -->
-            <tfoot>
-            <tr>
-                <th></th>
-                <th v-for="{title, key} in staffTableColumns" :key="`tf-${key}`">{{ title }}</th>
-                <th></th>
-            </tr>
-            </tfoot>
+<!--            <tfoot>-->
+<!--            <tr>-->
+<!--                <th></th>-->
+<!--                <th v-for="{title, key} in staffTableColumns" :key="`tf-${key}`">{{ title }}</th>-->
+<!--                <th></th>-->
+<!--            </tr>-->
+<!--            </tfoot>-->
 
         </table>
     </div>

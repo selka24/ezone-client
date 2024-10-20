@@ -22,7 +22,7 @@ const handleServiceSelect = (service: Service) => {
 </script>
 
 <template>
-    <div>
+    <div class="grid grid-cols-3 gap-4">
         <service-stat v-for="s in services"
                       @click="handleServiceSelect(s)"
                       :class="['border border-neutral cursor-pointer',  {'!border-primary': value === s._id}]"

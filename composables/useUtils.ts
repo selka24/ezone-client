@@ -1,4 +1,4 @@
-import { parseISO, format, setHours, setMinutes } from 'date-fns';
+import {parseISO, setHours, setMinutes} from 'date-fns';
 
 export const useUtils = () => {
 
@@ -39,17 +39,12 @@ export const useUtils = () => {
         const parsedStartTime = parseISO(start_time);
 
 // Extract hours and minutes from start_time
-        const hours = parsedStartTime.getUTCHours();
-        const minutes = parsedStartTime.getUTCMinutes();
+        const hours = parsedStartTime.getHours();
+        const minutes = parsedStartTime.getMinutes();
 
 // Set the extracted hours and minutes to the parsed date
-        const updatedDate = setHours(setMinutes(parsedDate, minutes), hours);
+        return setHours(setMinutes(parsedDate, minutes), hours)
 
-// Format the updated date
-        const formattedDate = format(updatedDate, "yyyy-MM-dd HH:mm");
-
-        console.log(formattedDate);
-        return formattedDate;
     }
 
     return {
