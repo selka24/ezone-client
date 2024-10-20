@@ -33,19 +33,16 @@ const { handleSubmit, errors, values: reservationInfo } = useForm({
     initialValues: {
         company: company.value?._id
         //@ts-ignore
-    }
+    },
+    validateOnMount: true
 })
 
 const {value: date} = useField<Date>('date');
-const {value: selectedTime} = useField<BookingTime>('selectedTime');
+const {value: selectedTime} = useField<BookingTime | null>('selectedTime');
 const {value: employee} = useField<string>('employee');
 const step = ref(0);
 const loading = ref(false);
 const confirmedReservation = ref<any>(null)
-
-watch(() => date, (newVal, oldVal) => {
-    console.log('i changeeed')
-})
 
 const getAvailableBookings = async () => {
     console.log({
@@ -53,6 +50,10 @@ const getAvailableBookings = async () => {
         company: company.value?._id,
         date
     })
+    if(!date.value){
+        selectedTime.value = null;
+        return [];
+    }
     try {
         const data: any = await $apiService.post('bookings/available', {
             body: {
@@ -65,7 +66,7 @@ const getAvailableBookings = async () => {
         return data
     } catch (e) {
         console.log(e, 'dataaaaaa')
-        return false
+        return []
     }
 }
 
@@ -75,14 +76,8 @@ const {data: availableBookings, status: statusTimes} = await useAsyncData<Bookin
 })
 
 const handleNextStep = async () => {
-    let goToNextStep = true;
     if(step.value < 4) {
-        if(step.value === 1){
-            // goToNextStep = await getAvailableBookings();
-        }
-        console.log('goToNextStep', goToNextStep)
-        if(goToNextStep)
-            step.value++
+        step.value++
     }
 }
 
@@ -97,14 +92,31 @@ const {$apiService} = useNuxtApp();
 //     }
 //     return null;
 // })
+const stepInvalid = computed(() => {
+    const stepErrors: {[key: number]: string[]} = {
+        0: ['service'],
+        1: ['date', 'selectedTime'],
+        2: ['employee'],
+        3: ['name', 'email', 'phone']
+    }
+    //@ts-ignore
+    const currFields = stepErrors[step.value];
+    const a = currFields?.find((fieldName: string) => {
+        //@ts-ignore
+        console.log(errors.value[fieldName], 'fieldName')
+        //@ts-ignore
+        return !!errors.value[fieldName]
+    });
+    console.log(a, 'aaaaaaaaaaaa')
+    return !!a;
+})
 
 const availableStaff = computed(() => {
     if(selectedTime.value){
-        return company.value?.employees?.filter((o) => selectedTime.value.availableEmpl?.includes(o._id))
+        return company.value?.employees?.filter((o) => selectedTime.value?.availableEmpl?.includes(o._id))
     }
     return []
 })
-
 
 const stepInformation = computed(() => {
     switch (step.value) {
@@ -135,13 +147,6 @@ const stepInformation = computed(() => {
             }
     }
 })
-
-// const services = computed(() => {
-//     if(company.value?.employees?.[0]){
-//         return company.value?.employees?.[0].services
-//     }
-//     return []
-// })
 
 const handleReserve = handleSubmit((bookingInfo) => {
     //@ts-ignore
@@ -179,7 +184,7 @@ const makeReservation = async (body: any) => {
     <div class="flex justify-center items-center p-10">
         <div class="max-w-screen-sm w-full">
             <div class="card bg-base-100 shadow-xl">
-                {{date}}
+                {{errors}} ---- {{stepInvalid}}
                 <form class="card-body"
                       @submit.prevent="handleReserve"
                       novalidate>
@@ -195,6 +200,7 @@ const makeReservation = async (body: any) => {
                     <BookServiceSelect v-if="services" v-show="step === 0" name="service" :services="services"/>
                     <div v-show="step === 1" class="grid grid-cols-9 justify-center">
                         <div class="col-span-6">
+                            {{date}}
                             <DatePicker v-model="date"
                                         class="p-0 m-0"
                                         :min-date="new Date()"
@@ -252,11 +258,15 @@ const makeReservation = async (body: any) => {
                             {{key}}: <b>{{info}}</b>
                         </div>
                     </div>
-                    <button v-if="step < 3" @click="handleNextStep" class="btn btn-primary mt-5" type="button">{{stepInformation.btnTitle}}</button>
-                    <button v-else class="btn btn-primary mt-5" type="submit">
+                    <button
+                        :type="step < 3 ? 'button' : 'submit'"
+                        :disabled="stepInvalid"
+                        @click="handleNextStep"
+                        class="btn btn-primary mt-5"
+                    >
                         <span v-if="loading" class="loading loading-bars loading-md"></span>
                         <span v-else>
-                            Reserve
+                            {{stepInformation.btnTitle}}
                         </span>
                     </button>
                 </form>

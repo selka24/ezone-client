@@ -82,6 +82,11 @@ export const bookingFormValidationSchema = yup.object({
     "name": yup.string().required(),
     "phone": yup.number().required(),
     "email": yup.string().email().required(),
+    "selectedTime": yup.object({
+        start_time: yup.string().required(),
+        end_time: yup.string().required(),
+        availableEmpl: yup.array().of(yup.string()).required(),
+    }).required(),
     "employee": yup.string().required(),
     "date": yup.string().transform(val => moment(val).format('YYYY-MM-DD HH:mm')).required(),
 })
