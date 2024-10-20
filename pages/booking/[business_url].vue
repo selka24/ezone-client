@@ -7,7 +7,6 @@ import BookServiceSelect from "~/components/booking/BookServiceSelect.vue";
 import InputText from "~/components/inputs/InputText.vue";
 import moment from "moment";
 import StaffAvatar from "~/components/admin/staff/StaffAvatar.vue";
-import {format} from "date-fns";
 
 const {$api} = useNuxtApp();
 const {addTimeToDate} = useUtils();
@@ -294,16 +293,18 @@ const makeReservation = async (body: any) => {
                             </div>
                         </div>
                     </div>
-                    <div v-if="step === 5" class="flex flex-col gap-3">
+                    <div v-if="step === 5" class="flex flex-col gap-3 prose">
                         <div class="font-bold text-success">
                             Rezervimi juaj u krye me sukses
                         </div>
-                        <hr>
                         <div class="flex flex-col gap-5">
                             <div v-for="(info, key) in reservationData">
                                 {{key}}: <b>{{info}}</b>
                             </div>
                         </div>
+                        <p>
+                            Rezervimin mund ta gjeni ne adresen tuaj te e-mailit.
+                        </p>
                     </div>
                     <button
                         v-if="step < 4"
