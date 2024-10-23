@@ -31,6 +31,7 @@ export const serviceValidationSchema = yup.object({
     "duration": yup.number().integer().required().min(5, 'duration must be greater than or equal to 5 minutes'),
     "price": yup.number().required()
 })
+const validWeekdays = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
 
 export const employeeValidationSchema = yup.object({
     "company": yup.string().nullable(),
@@ -38,13 +39,27 @@ export const employeeValidationSchema = yup.object({
     "lastname": yup.string().required(),
     "job_title": yup.string().required(),
     services: yup.array().of(yup.string()).required(),
-    working_days: yup.array().of(yup.object({
-        day: yup.string().oneOf(['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']),
-        start_time: yup.number(),
-        end_time: yup.number().when('start_time', ([start_time], schema) => {
-            return schema.moreThan(start_time, 'End time should be greater than the start time');
-        })
-    })),
+    // working_days: yup.array().of(yup.object({
+    //     day: yup.string().oneOf(['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']),
+    //     start_time: yup.number(),
+    //     end_time: yup.number().when('start_time', ([start_time], schema) => {
+    //         return schema.moreThan(start_time, 'End time should be greater than the start time');
+    //     })
+    // })),
+    working_days: yup.object().shape({
+        working_days: yup.object().shape(
+            validWeekdays.reduce((schema, day) => {
+                schema[day] = yup.object({
+                    day: yup.string().oneOf(validWeekdays),
+                    start_time: yup.number(),
+                    end_time: yup.number().when('start_time', ([start_time], schema) => {
+                        return schema.moreThan(start_time, 'End time should be greater than the start time');
+                    })
+                }).optional(); // Day can be optional, but if present, the 'time' must be required
+                return schema;
+            }, {})
+        )
+    })
 })
 
 export const testValidation = async () => {

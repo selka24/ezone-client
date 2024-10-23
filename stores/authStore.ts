@@ -1,7 +1,7 @@
 import type {AuthUser, AuthRegister, AuthLogin} from "~/interfaces/main-types";
 import {acceptHMRUpdate, defineStore} from 'pinia';
 
-export const useAuthStore =     defineStore('authStore', () => {
+export const useAuthStore = defineStore('authStore', () => {
     const router = useRouter();
     const { $toast, $api } = useNuxtApp();
     const companyStore = useCompanyStore()

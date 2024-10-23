@@ -57,14 +57,31 @@ export interface Service {
     "price": number
 }
 
-export interface Employee {
+export interface WorkingDays {
+    monday?: WorkDay;
+    tuesday?: WorkDay;
+    wednesday?: WorkDay;
+    thursday?: WorkDay;
+    friday?: WorkDay;
+    saturday?: WorkDay;
+    sunday?: WorkDay;
+}
+
+interface BaseEmployee {
     _id: string,
     company: string
     name: string
     lastname: string
     job_title: string
     services: Service[]
+}
+
+export interface Employee extends BaseEmployee{
     working_days: WorkDay[]
+}
+
+export interface ValidationFormEmployee extends BaseEmployee {
+    working_days: WorkingDays
 }
 
 export interface CreateCompany extends CompanyMainInfo {

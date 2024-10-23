@@ -56,7 +56,7 @@ employeeStore.actGetAllEmployees();
                     </div>
                 </td>
                 <th>
-                    <button class="btn btn-ghost btn-xs">details</button>
+                    <button class="btn btn-ghost btn-xs" @click="$emit('viewEmployee', staff)">details</button>
                 </th>
             </tr>
             </tbody>
