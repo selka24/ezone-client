@@ -186,7 +186,7 @@ const handleReserve = handleSubmit((bookingInfo) => {
     //@ts-ignore
     const {selectedTime: {start_time}, ...rest} = bookingInfo
     console.log('start_time:::', start_time);
-    let final = {...rest, date: moment(finalDateTime.value).format("yyyy-MM-DD HH:mm")}
+    let final = {...rest, date: moment(finalDateTime.value).toISOString()}
     console.log('final:::', final);
     makeReservation(final)
 })
@@ -220,7 +220,7 @@ const makeReservation = async (body: any) => {
                             <fai icon="chevron-left"></fai>
                         </button>
                         <h2 class="font-bold text-3xl mr-auto">
-                            {{company?.name}} - {{step}}
+                            {{company?.name}}
                         </h2>
                         <button v-if="step !== 5" class="btn btn-primary" @click="handleNextStep" :disabled="stepInvalid">
                             <fai icon="chevron-right"></fai>
