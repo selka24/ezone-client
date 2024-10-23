@@ -16,7 +16,7 @@ export const useEmployeeStore = defineStore('employeeStore', () => {
     }
 
     const actCreateEmployee = async (employee: Employee) => {
-        $apiService.post('/employee/create', {
+        await $apiService.post('/employee/create', {
             body: employee
         })
     }

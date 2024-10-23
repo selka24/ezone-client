@@ -1,20 +1,21 @@
 <script setup lang="ts">
 import StaffTable from "~/components/admin/staff/StaffTable.vue";
-// import StaffForm from "~/components/admin/createForm/StaffForm.vue";
-import StaffDefaultForm from "~/components/inputs/StaffDefaultForm.vue";
+// import StaffDefaultForm from "~/components/inputs/StaffDefaultForm.vue";
 import type {Employee} from "~/interfaces/main-types";
-import moment from "moment";
-// import WeekdayPicker from "~/components/ui/WeekdayPicker.vue";
-
+const StaffDefaultForm = defineAsyncComponent(() => import('~/components/inputs/StaffDefaultForm.vue'))
 const companyStore = useCompanyStore();
 const employeeStore = useEmployeeStore();
 const staffModal = ref<any>(null);
 const showModal = ref(false);
 const editEmployee = ref<Employee | undefined>()
 
-const handleEmployeeCreate = (employee: Employee) => {
+const handleEmployeeCreate = async (employee: Employee) => {
     // console.log(employee)
-    employeeStore.actCreateEmployee(employee)
+    await employeeStore.actCreateEmployee(employee);
+    showModal.value = false;
+    nextTick(() => {
+        employeeStore.actGetAllEmployees();
+    })
 }
 
 const handleModalOpen = (e?: Employee) => {
