@@ -57,6 +57,7 @@ const companyHours = Array.from({ length: 23 - 9 + 1 }, (_, i) => 9 + i);
 const selectedDays = ref<Days[]>([])
 const companyId = computed(() => companyStore.company?._id || '');
 const services = computed(() => companyStore.services);
+const submittedOnce = ref(false)
 // const time = ref([0,0]);
 
 const initialEmployee = transformEditEmployee() || {
@@ -67,7 +68,7 @@ if(props.editEmployee){
     selectedDays.value = employeeWorkDays;
 }
 
-const {handleSubmit, resetForm, values, errors, setValues} = useForm<ValidationFormEmployee>({
+const {handleSubmit, resetForm, values, errors, setValues, setFieldValue} = useForm<ValidationFormEmployee>({
     validationSchema: employeeValidationSchema,
     initialValues: initialEmployee,
 })
@@ -78,24 +79,27 @@ const sortWeekDays = computed(() => {
     })
 })
 
-const handleEmployeeSubmit = handleSubmit((employee) => {
-    emit('employeeSubmit', {
-        ...employee,
-        working_days: Object.keys(employee.working_days).reduce((finalDays: WorkDay[], key) => {
-            const weekDay = key as keyof WorkingDays;
-            const workDay = employee.working_days[weekDay];
-            if (workDay) {
-                const {day, start_time, end_time} = workDay;
-                finalDays.push( {
-                    day,
-                    start_time: `${moment().startOf('day').add(start_time, 'minutes').toISOString()}`,
-                    end_time: `${moment().startOf('day').add(end_time, 'minutes').toISOString()}`,
-                })
-            }
-            return finalDays
-        }, [])
+const handleEmployeeSubmit = () => {
+    submittedOnce.value = true;
+    handleSubmit((employee) => {
+        emit('employeeSubmit', {
+            ...employee,
+            working_days: Object.keys(employee.working_days).reduce((finalDays: WorkDay[], key) => {
+                const weekDay = key as keyof WorkingDays;
+                const workDay = employee.working_days[weekDay];
+                if (workDay) {
+                    const {day, start_time, end_time} = workDay;
+                    finalDays.push({
+                        day,
+                        start_time: `${moment().startOf('day').add(start_time, 'minutes').toISOString()}`,
+                        end_time: `${moment().startOf('day').add(end_time, 'minutes').toISOString()}`,
+                    })
+                }
+                return finalDays
+            }, [])
+        })
     })
-})
+}
 //
 const getDefaultWorkDay = (newDays: Days[]) => {
     if(newDays.length){
@@ -117,6 +121,26 @@ const getDefaultWorkDay = (newDays: Days[]) => {
     }
     return {};
 }
+
+const handleApplyAll = (baseDay: Days) => {
+    const baseWorkDay = values.working_days[baseDay];
+    if(baseWorkDay){
+        sortWeekDays.value.forEach((selDay) => {
+            if(selDay !== baseDay){
+                setFieldValue(`working_days.${selDay}`, {...baseWorkDay})
+            }
+        })
+    }
+}
+
+const showApplyAll = computed(() => {
+    if(sortWeekDays.value.length < 2)
+        return false;
+    const firstWorkDay = values.working_days[sortWeekDays.value[0]]
+    if(firstWorkDay)
+        return firstWorkDay.start_time && firstWorkDay.end_time ? firstWorkDay.end_time > firstWorkDay.start_time : false;
+    return false;
+})
 
 watch(selectedDays, (newDays) => {
     console.log('setting values')
@@ -147,12 +171,12 @@ watch(selectedDays, (newDays) => {
                 <WeekdayPicker v-model="selectedDays" class="justify-between"/>
             </div>
             <div class="grid grid-cols-1 gap-3">
-                <div class="label" v-if="errors?.working_days">
+                <div class="label" v-if="errors?.working_days && submittedOnce">
                     <span class="label-text-alt text-error">{{ errors?.working_days }}</span>
                 </div>
                 <div v-for="(day, idx) in sortWeekDays" :key="day + '-inputGroup'"
-                     class="shadow-2xl p-3 rounded grid grid-cols-3 items-center">
-                    <div class="label capitalize badge-primary justify-center badge w-10/12 py-4">{{day}}</div>
+                     class="shadow-2xl p-3 rounded grid grid-cols-3 items-start">
+                    <div class="label capitalize badge-primary justify-center badge w-10/12 py-4 mt-2">{{day}}</div>
                     <InputText :name="`working_days.${day}.day`"
                                class="hidden"/>
                     <div class="grid grid-cols-11 gap-5 items-center col-span-2">
@@ -177,6 +201,9 @@ watch(selectedDays, (newDays) => {
                                 minutes: [0]
                             }"
                         />
+                        <div v-if="idx === 0 && showApplyAll" class="col-span-full flex">
+                            <button type="button" class="btn btn-primary btn-xs ml-auto" @click="handleApplyAll(day)">Apply to all</button>
+                        </div>
                     </div>
                 </div>
             </div>

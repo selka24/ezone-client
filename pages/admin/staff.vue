@@ -3,7 +3,7 @@ import StaffTable from "~/components/admin/staff/StaffTable.vue";
 // import StaffDefaultForm from "~/components/inputs/StaffDefaultForm.vue";
 import type {Employee} from "~/interfaces/main-types";
 const StaffDefaultForm = defineAsyncComponent(() => import('~/components/inputs/StaffDefaultForm.vue'))
-const companyStore = useCompanyStore();
+// const companyStore = useCompanyStore();
 const employeeStore = useEmployeeStore();
 const staffModal = ref<any>(null);
 const showModal = ref(false);

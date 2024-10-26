@@ -64,6 +64,8 @@ export default defineNuxtConfig({
               'gear',
               'circle-xmark',
               'plus',
+              'trash',
+              'eye',
               'people-group',
               'chart-simple',
               'magnifying-glass-chart',

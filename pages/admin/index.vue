@@ -12,7 +12,7 @@ const authStore = useAuthStore();
 <template>
     <div>
         <AdminWelcomeScreen v-if="!authStore.authUser?.companyProfileId"/>
-        <BookingTable />
+        <BookingTable v-else/>
     </div>
 </template>
 

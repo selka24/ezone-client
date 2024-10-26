@@ -22,7 +22,7 @@
             return allBookings.value.map((b: any) => {
                 return {
                     id: b._id,
-                    staffName: `${b.employee.name} ${b.employee.lastname}`,
+                    staffName: `${b.employee?.name} ${b.employee?.lastname}`,
                     date: moment(b.date).format('HH:mm DD MMM'),
                     name: b.name,
                     phone: b.phone,

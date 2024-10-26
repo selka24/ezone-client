@@ -33,6 +33,9 @@ export default defineNuxtPlugin(() => {
         get: (url: string, params?: any) => api(url, {
             method: 'GET',
             ...(params ? {params} : {})
+        }),
+        delete: (url: string) => api(url, {
+            method: 'DELETE'
         })
     }
 
