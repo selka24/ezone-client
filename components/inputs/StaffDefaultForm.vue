@@ -67,9 +67,9 @@ if(props.editEmployee){
     selectedDays.value = employeeWorkDays;
 }
 
-const {handleSubmit, resetForm, values, errors} = useForm<ValidationFormEmployee>({
+const {handleSubmit, resetForm, values, errors, setValues} = useForm<ValidationFormEmployee>({
     validationSchema: employeeValidationSchema,
-    initialValues: initialEmployee
+    initialValues: initialEmployee,
 })
 
 const sortWeekDays = computed(() => {
@@ -97,10 +97,11 @@ const handleEmployeeSubmit = handleSubmit((employee) => {
     })
 })
 //
-const getDefaultWorkDay = () => {
-    if(selectedDays.value.length){
+const getDefaultWorkDay = (newDays: Days[]) => {
+    if(newDays.length){
         const currWorkDays: WorkingDays = {};
-        selectedDays.value.forEach(day => {
+        newDays.forEach(day => {
+            console.log(day, 'dayyyyyyyy')
             const foundWorkDay = values.working_days?.[day];
             if(foundWorkDay)
                 currWorkDays[day] = foundWorkDay;
@@ -117,13 +118,12 @@ const getDefaultWorkDay = () => {
     return {};
 }
 
-watch(selectedDays, () => {
-    resetForm({
-        values: {
-            ...values,
-            working_days: getDefaultWorkDay(),
-        }
-    })
+watch(selectedDays, (newDays) => {
+    console.log('setting values')
+    setValues({
+        ...values,
+        working_days: getDefaultWorkDay(newDays),
+    }, false)
 });
 </script>
 
@@ -146,31 +146,34 @@ watch(selectedDays, () => {
                 <div class="label mb-3">Select working days</div>
                 <WeekdayPicker v-model="selectedDays" class="justify-between"/>
             </div>
-            <div class="grid grid-cols-1 gap-5">
+            <div class="grid grid-cols-1 gap-3">
+                <div class="label" v-if="errors?.working_days">
+                    <span class="label-text-alt text-error">{{ errors?.working_days }}</span>
+                </div>
                 <div v-for="(day, idx) in sortWeekDays" :key="day + '-inputGroup'"
-                     class="shadow-2xl p-3 rounded">
-                    <div class="label capitalize text-primary">{{day}}</div>
+                     class="shadow-2xl p-3 rounded grid grid-cols-3 items-center">
+                    <div class="label capitalize badge-primary justify-center badge w-10/12 py-4">{{day}}</div>
                     <InputText :name="`working_days.${day}.day`"
                                class="hidden"/>
-                    <div class="grid grid-cols-11 gap-5 items-center">
+                    <div class="grid grid-cols-11 gap-5 items-center col-span-2">
                         <InputDuration
                             class="col-span-5"
                             :name="`working_days.${day}.start_time`"
                             :attributes="{
                                 hours: companyHours,
-                                label: 'Start time',
+                                noLabel: true,
                                 minutes: [0]
                             }"
                         />
-                        <div class="justify-center flex mt-7">
-                            -
+                        <div>
+                            to
                         </div>
                         <InputDuration
                             class="col-span-5"
                             :name="`working_days.${day}.end_time`"
                             :attributes="{
                                 hours: companyHours,
-                                label: 'End time',
+                                noLabel: true,
                                 minutes: [0]
                             }"
                         />
@@ -182,7 +185,7 @@ watch(selectedDays, () => {
             <slot name="submitButton">
                 <button type="submit" class="btn btn-primary mt-9 w-full">
                     <fai icon="plus"/>
-                    Add
+                    {{ editEmployee ? 'Update' : 'Add' }}
                 </button>
             </slot>
         </div>

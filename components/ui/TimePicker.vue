@@ -1,6 +1,6 @@
 <template>
     <label ref="timePicker" class="form-control w-full relative">
-        <div class="label">
+        <div v-if="!noLabel" class="label">
             <span class="label-text capitalize">{{ label || 'Duration' }}</span>
         </div>
         <input :value="inputValue"
@@ -38,7 +38,8 @@ const props = withDefaults(defineProps<{
     label?: string,
     errorMessage?: string,
     hours?: number[],
-    minutes?: number[]
+    minutes?: number[],
+    noLabel?: boolean
 }>(), {
     hours: () => [...Array(4).keys()],
     minutes:  () => [0, 15, 30, 45]

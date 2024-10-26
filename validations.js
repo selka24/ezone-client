@@ -33,12 +33,32 @@ export const serviceValidationSchema = yup.object({
 })
 const validWeekdays = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
 
+const workingDaysSchema = validWeekdays.reduce((schema, day) => {
+    schema[day] = yup.object({
+        day: yup.string().oneOf(validWeekdays),
+        start_time: yup.number(),
+        end_time: yup.number().when('start_time', ([start_time], schema) => {
+            return schema.moreThan(start_time, 'End time should be greater than the start time');
+        })
+    }).optional(); // Day can be optional, but if present, the 'time' must be required
+    return schema;
+}, {})
+
+console.log({workingDaysSchema})
+
 export const employeeValidationSchema = yup.object({
     "company": yup.string().nullable(),
     "name": yup.string().required(),
     "lastname": yup.string().required(),
     "job_title": yup.string().required(),
-    services: yup.array().of(yup.string()).required(),
+    services: yup.array().transform((value, originalValue) => {
+        return originalValue.map(s => {
+            if( typeof s == "string" ){
+                return s;
+            }
+            return s._id;
+        });
+    }).of(yup.string()).required(),
     // working_days: yup.array().of(yup.object({
     //     day: yup.string().oneOf(['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']),
     //     start_time: yup.number(),
@@ -46,39 +66,16 @@ export const employeeValidationSchema = yup.object({
     //         return schema.moreThan(start_time, 'End time should be greater than the start time');
     //     })
     // })),
-    working_days: yup.object().shape({
-        working_days: yup.object().shape(
-            validWeekdays.reduce((schema, day) => {
-                schema[day] = yup.object({
-                    day: yup.string().oneOf(validWeekdays),
-                    start_time: yup.number(),
-                    end_time: yup.number().when('start_time', ([start_time], schema) => {
-                        return schema.moreThan(start_time, 'End time should be greater than the start time');
-                    })
-                }).optional(); // Day can be optional, but if present, the 'time' must be required
-                return schema;
-            }, {})
-        )
+    working_days: yup.object(workingDaysSchema).test({
+        name: 'at-least-one-day',
+        message: 'At least one day with working hours is required',
+        test: value=> {
+            return Object.values(value).some(
+                day => day && day.start_time !== undefined && day.end_time !== undefined
+            );
+        }
     })
 })
-
-export const testValidation = async () => {
-    const validation = await employeeValidationSchema.validate({
-        company: 'company',
-        name: 'name',
-        lastname: 'lastname',
-        job_title: 'job_title',
-        services: [123],
-        working_days: [{
-            day: 'monday',
-            start_time: 12345678,
-            end_time: 12345688,
-        }],
-    })
-
-    console.log(validation, 'validation validation')
-}
-
 
 export const mainInfoValidationSchema = yup.object(mainInfoObject)
 

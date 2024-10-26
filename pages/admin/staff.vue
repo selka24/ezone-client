@@ -10,8 +10,12 @@ const showModal = ref(false);
 const editEmployee = ref<Employee | undefined>()
 
 const handleEmployeeCreate = async (employee: Employee) => {
-    // console.log(employee)
-    await employeeStore.actCreateEmployee(employee);
+    console.log(employee)
+    if (employee._id){
+        await employeeStore.actUpdateEmployee(employee);
+    } else {
+        await employeeStore.actCreateEmployee(employee);
+    }
     showModal.value = false;
     nextTick(() => {
         employeeStore.actGetAllEmployees();
@@ -50,8 +54,12 @@ const handleEditEmployee = (e: Employee) => {
                     <form method="dialog">
                         <button @click="() => showModal = false" class="btn btn-sm btn-circle btn-ghost absolute right-2 top-6">✕</button>
                     </form>
-                    <h3 class="font-bold text-lg px-1">Add New Staff</h3>
-                    <StaffDefaultForm class="grid grid-cols-2 modalForm" :edit-employee="editEmployee" @employeeSubmit="handleEmployeeCreate"/>
+                    <h3 class="font-bold text-lg px-1">{{ editEmployee ? 'Edit Staff' : 'Add New Staff' }}</h3>
+                    <StaffDefaultForm
+                        class="grid grid-cols-2 modalForm"
+                        :edit-employee="editEmployee"
+                        @employeeSubmit="handleEmployeeCreate"
+                    />
                 </div>
             </dialog>
         </div>

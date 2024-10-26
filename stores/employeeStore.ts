@@ -21,9 +21,21 @@ export const useEmployeeStore = defineStore('employeeStore', () => {
         })
     }
 
+    const actUpdateEmployee = async (employee: Employee) => {
+        await $apiService.put(`/employee/${employee._id}`, {
+            body: {
+                ...employee,
+                services: employee.services.map(s => {
+                    return s._id
+                })
+            }
+        })
+    }
+
     return {
         allEmployees,
         actGetAllEmployees,
         actCreateEmployee,
+        actUpdateEmployee,
     }
 })

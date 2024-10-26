@@ -55,6 +55,8 @@ export default defineNuxtConfig({
           solid: [
               'right-from-bracket',
               'chevron-left',
+              'pencil',
+              'pen',
               'chevron-right',
               'house',
               'sheet-plastic',

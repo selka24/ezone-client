@@ -26,6 +26,10 @@ export default defineNuxtPlugin(() => {
             method: 'POST',
             body
         }),
+        put: (url: string, {body}: {body: any}) => api(url, {
+            method: 'PUT',
+            body
+        }),
         get: (url: string, params?: any) => api(url, {
             method: 'GET',
             ...(params ? {params} : {})
