@@ -39,7 +39,6 @@ export const useAuthStore = defineStore('authStore', () => {
                 body: {email, password}
             })
 
-
             const token = useCookie('token');
             const userCookie = useCookie('user');
 

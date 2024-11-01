@@ -10,7 +10,7 @@ export const useCompanyStore = defineStore('companyStore', () => {
 
     //state
     const creatingCompany = ref(false);
-    const {data: company, refresh, execute, pending, status} = useAsyncData<Company | null>('myCompany',
+    const {data: company, refresh, status} = useAsyncData<Company | null>('myCompany',
         () => $api(`/company/${companyProfileId.value}`, {
         method: 'GET',
         // signal: abortController.signal,
@@ -103,7 +103,6 @@ export const useCompanyStore = defineStore('companyStore', () => {
         services,
         companyProfileId,
         creatingCompany,
-        pending,
         actCreateCompany,
         actUpdateCompany,
         status,

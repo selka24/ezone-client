@@ -10,7 +10,10 @@ const mainInfoObject = {
     "description": yup.string().required(),
     "name": yup.string().required(),
     "show_price": yup.boolean(),
-    "location": yup.string().required()
+    "location": yup.string().required(),
+    "phone": yup.string().matches(/^(69|67|68)\d{7}$/),
+    "whatsapp_number": yup.string(),
+    "instagram": yup.string(),
 }
 
 

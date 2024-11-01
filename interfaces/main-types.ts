@@ -29,6 +29,9 @@ export interface CompanyMainInfo {
     name: string
     show_price: boolean
     location: string
+    phone?: number
+    whatsapp_number?: number
+    instagram?: string
 }
 
 export enum Days {

@@ -11,6 +11,12 @@ const companyStore = useCompanyStore();
 const {company, services} = storeToRefs(companyStore);
 const editMode = ref(false);
 const {$api} = useNuxtApp();
+const businessTabs = [
+    {title: 'Profile', value: 1},
+    {title: 'Services', value: 2},
+    {title: 'Settings', value: 3},
+]
+const currTab = ref(1)
 
 const initialValues = computed(() => {
     return company || {}
@@ -55,6 +61,17 @@ const updateCompany = handleSubmit((values) => {
 
 <template>
     <div>
+        <div role="tablist" class="tabs tabs-lifted">
+            <div
+                v-for="tab in businessTabs"
+                :key="tab.value"
+                @click="currTab = tab.value"
+                role="tab"
+                :class="['tab', {'tab-active': tab.value === currTab}]"
+            >
+                {{tab.title }}
+            </div>
+        </div>
         <form @submit.prevent="updateCompany">
             <div class="flex items-end justify-between">
                 <div class="prose">

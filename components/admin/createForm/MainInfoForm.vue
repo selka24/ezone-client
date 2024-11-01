@@ -29,6 +29,9 @@ const handleMainInfoSubmit = handleSubmit((values) => {
         <InputText name="name" :attributes="{placeholder: 'Emri i biznesit tuaj'}"/>
         <InputText name="description" :attributes="{placeholder: 'Nje pershkrim i shkurter'}"/>
         <InputToggle name="show_price" label="Show Price" />
+        <InputText name="phone" :attributes="{placeholder: 'Nr. celular'}"/>
+        <InputText name="whatsapp_number" :attributes="{placeholder: 'Whatsapp'}"/>
+        <InputText name="instagram" :attributes="{placeholder: 'Instagram'}"/>
         <InputText name="location" :attributes="{placeholder: 'Vendndodhja e biznesit'}"/>
         <button class="btn btn-primary">
             <span>

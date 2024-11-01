@@ -79,9 +79,8 @@ const sortWeekDays = computed(() => {
     })
 })
 
-const handleEmployeeSubmit = () => {
-    submittedOnce.value = true;
-    handleSubmit((employee) => {
+const handleEmployeeSubmit = handleSubmit((employee) => {
+        console.log('employee submit 2')
         emit('employeeSubmit', {
             ...employee,
             working_days: Object.keys(employee.working_days).reduce((finalDays: WorkDay[], key) => {
@@ -99,7 +98,6 @@ const handleEmployeeSubmit = () => {
             }, [])
         })
     })
-}
 //
 const getDefaultWorkDay = (newDays: Days[]) => {
     if(newDays.length){
@@ -210,7 +208,7 @@ watch(selectedDays, (newDays) => {
         </div>
         <div class="col-span-2">
             <slot name="submitButton">
-                <button type="submit" class="btn btn-primary mt-9 w-full">
+                <button type="submit" @click="() => submittedOnce = true" class="btn btn-primary mt-9 w-full">
                     <fai icon="plus"/>
                     {{ editEmployee ? 'Update' : 'Add' }}
                 </button>

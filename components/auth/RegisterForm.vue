@@ -25,9 +25,9 @@ const roleOptions: string[] = [
 </script>
 
 <template>
-    <form @submit.prevent="onSubmit" class="card-body" novalidate>
-        <InputText name="email" :attributes="{type: 'email'}" />
-        <InputText name="username" />
+    <form @submit.prevent="onSubmit" class="card-body" novalidate autocomplete="off">
+        <InputText name="email" :attributes="{type: 'email', name: 'email'}" />
+        <InputText name="username" :attributes="{}"/>
         <InputText name="password" :attributes="{type: 'password'}" />
         <label class="form-control w-full max-w-xs">
             <div class="label">

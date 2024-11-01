@@ -16,7 +16,18 @@ export default defineNuxtPlugin(() => {
             if (response.status === 401) {
                 await navigateTo('/login')
             } else {
-                if(!import.meta.server) $toast.error(response._data?.message || 'Something went wrong!')
+                console.log(response._data, 'response._data')
+                if(!import.meta.server) {
+                    let toastMsg = 'Something went wrong!';
+                    if(response._data){
+                        if(typeof response._data === 'string') {
+                            toastMsg = response._data;
+                        } else if(response._data.message) {
+                            toastMsg = response._data.message;
+                        }
+                    }
+                    $toast.error(toastMsg);
+                }
             }
         },
     })
