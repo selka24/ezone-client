@@ -33,7 +33,7 @@ const { value, errorMessage } = useField(() => props.name);
             <span class="label-text capitalize">{{ name }}</span>
         </div>
         <input v-model="value"
-               class="input input-bordered"
+               :class="['input input-bordered', {'input-disabled': attributes?.readonly}]"
                v-bind="attributes"/>
         <div class="label">
             <span class="label-text-alt text-error">{{ errorMessage }}</span>

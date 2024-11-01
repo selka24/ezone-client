@@ -5,7 +5,7 @@ import CompanyHead from "~/components/header/CompanyHead.vue";
 </script>
 
 <template>
-    <div class="flex w-full mt-5 justify-between items-center">
+    <div class="flex w-full mt-5 mb-8 justify-between items-center">
         <CompanyHead />
         <RightMenu />
     </div>
