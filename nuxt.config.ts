@@ -3,7 +3,7 @@ import type { NuxtPage} from 'nuxt/schema';
 
 export default defineNuxtConfig({
   devtools: { enabled: true },
-
+  ssr: false,
   typescript: {
       typeCheck: true
   },

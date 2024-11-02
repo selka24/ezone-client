@@ -1,11 +1,16 @@
 <script setup lang="ts">
-import ServiceInputGroup from "~/components/inputs/ServiceInputGroup.vue";
 import ServiceStat from "~/components/admin/services/ServiceStat.vue";
 import type {Service} from "~/interfaces/main-types";
 
+const ServiceInputGroup = defineAsyncComponent(() => import("~/components/inputs/ServiceInputGroup.vue"));
+
 const companyStore = useCompanyStore();
 const { services } = storeToRefs(companyStore);
-const {$api} = useNuxtApp();
+const { $api } = useNuxtApp();
+
+const showModal = ref(false)
+const editService = ref<Service | null>(null);
+const serviceModal = ref<any>(null);
 
 const handleNewService = async (newService: Service) => {
     try{
@@ -30,11 +35,36 @@ const handleDeleteService = async (id: string | undefined) => {
 
     }
 }
+
+const handleModalOpen = (service?: Service) => {
+    if(service) {
+        editService.value = service;
+    }
+    showModal.value = true;
+    serviceModal.value?.showModal();
+}
 </script>
 
 <template>
     <div class="flex flex-col">
-        <div class="flex justify-between gap-10 lg:gap-20">
+        <dialog
+
+            id="serviceModal"
+            ref="serviceModal"
+            class="modal">
+            <div class="modal-box">
+                <form method="dialog">
+                    <button @click="() => showModal = false" class="btn btn-sm btn-circle btn-ghost absolute right-2 top-6">✕</button>
+                </form>
+                <h3 class="font-bold text-lg px-1">{{ editService ? 'Edit Service' : 'Add New Service' }}</h3>
+                <ServiceInputGroup
+                    class="modalServiceForm mt-2"
+                    v-if="showModal"
+                    @serviceSubmit="handleNewService"
+                />
+            </div>
+        </dialog>
+        <div class="flex justify-between items-end gap-10 lg:gap-20">
             <div class="prose min-w-max">
                 <h2>
                     Services
@@ -43,11 +73,13 @@ const handleDeleteService = async (id: string | undefined) => {
                     View or change the your services
                 </p>
             </div>
+            <button class="btn btn-primary ml-auto" @click="handleModalOpen()">
+                <fai icon="plus"/>
+                Add Service
+            </button>
         </div>
+        <div class="divider divider-neutral"></div>
         <div class="grid grid-cols-6 mt-6">
-            <div class="col-span-6 md:col-span-5">
-                <ServiceInputGroup @serviceSubmit="handleNewService"/>
-            </div>
             <div class="flex flex-wrap gap-5 col-span-6 mt-10">
                 <div v-for="(service, idx) in services"
                      class="relative"
@@ -63,6 +95,5 @@ const handleDeleteService = async (id: string | undefined) => {
     </div>
 </template>
 
-<style scoped>
-
+<style lang="postcss">
 </style>
