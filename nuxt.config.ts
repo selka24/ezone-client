@@ -29,6 +29,7 @@ export default defineNuxtConfig({
 
   css: [
       '~/assets/css/main.css',
+      '~/assets/css/transitions.css',
   ],
 
   runtimeConfig: {
@@ -70,6 +71,8 @@ export default defineNuxtConfig({
               'chart-simple',
               'magnifying-glass-chart',
               'user',
+              'xmark',
+              'check',
           ],
           regular: [
               'building',

@@ -34,7 +34,7 @@
 </script>
 
 <template>
-    <div class="fixed h-[100vh]  z-10 flex flex-col bg-base-200 pl-3 top-0">
+    <div class="fixed h-[100vh]  z-10 flex flex-col bg-base-300 pl-3 top-0">
         <h2 class="text-3xl font-bold ml-auto pr-8 mb-8 mt-5">
             E ZON
         </h2>
@@ -109,7 +109,7 @@
     z-index: 2;
 }
 .tabs .active a:after, .tabs .active a:before {
-    @apply bg-base-200;
+    @apply bg-base-300;
 }
 /* First and last tabs have different
    outside color needs

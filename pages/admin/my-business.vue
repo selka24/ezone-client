@@ -1,7 +1,7 @@
 <script setup lang="ts">
-// import ServicesForm from "~/components/admin/createForm/ServicesForm.vue";
 const BusinessProfile = defineAsyncComponent(() => import("~/components/admin/business/BusinessProfile.vue"));
 const BusinessServices = defineAsyncComponent(() => import("~/components/admin/business/BusinessServices.vue"));
+const BusinessSettings = defineAsyncComponent(() => import("~/components/admin/business/BusinessSettings.vue"));
 
 const businessTabs = [
     {title: 'Profile', value: 1},
@@ -29,6 +29,7 @@ const currTab = ref(1)
         <transition name="page" mode="out-in" :duration="100">
             <BusinessProfile v-if="currTab === 1"/>
             <BusinessServices v-else-if="currTab === 2"/>
+            <BusinessSettings v-else-if="currTab === 3"/>
         </transition>
     </div>
 </template>

@@ -81,21 +81,6 @@ const updateCompany = handleSubmit((values) => {
                     />
                 </div>
             </div>
-            <div class="divider divider-neutral"></div>
-            <div class="flex gap-10 lg:gap-20 justify-between">
-                <div class="prose min-w-max">
-                    <h3>
-                        Booking settings
-                    </h3>
-                    <p>
-                        View or change the booking experience for your customers
-                    </p>
-                </div>
-                <div class="w-full">
-                    <InputToggle class="max-w-max" name="show_price" label="Show prices"/>
-                    <span class="text-sm">Turn this feature on/off to show/remove prices of your services</span>
-                </div>
-            </div>
         </form>
 </template>
 

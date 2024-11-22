@@ -44,6 +44,13 @@ export enum Days {
     sunday = "sunday",
 }
 
+export enum ReservationStatuses {
+    PENDING = 'pending',
+    ACCEPTED = 'accepted',
+    CANCELED_BY_CUSTOMER = 'canceled by customer',
+    CANCELED_BY_COMPANY = 'canceled by company',
+}
+
 export interface WorkDay {
     day: Days,
     start_time: string | number
