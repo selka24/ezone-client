@@ -33,22 +33,26 @@ export default defineNuxtPlugin(() => {
     })
 
     const apiService = {
-        post: (url: string, {body}: {body: any}) => api(url, {
-            method: 'POST',
-            body
-        }),
-        put: (url: string, {body}: {body: any}) => api(url, {
-            method: 'PUT',
-            body
-        }),
-        get: (url: string, params?: any) => api(url, {
-            method: 'GET',
-            ...(params ? {params} : {})
-        }),
-        delete: (url: string) => api(url, {
-            method: 'DELETE'
-        })
-    }
+        post: <T>(url: string, { body }: { body: any }): Promise<T> =>
+            api(url, {
+                method: 'POST',
+                body,
+            }),
+        put: <T>(url: string, { body }: { body: any }): Promise<T> =>
+            api(url, {
+                method: 'PUT',
+                body,
+            }),
+        get: <T>(url: string, params?: any): Promise<T> =>
+            api(url, {
+                method: 'GET',
+                ...(params ? { params } : {}),
+            }),
+        delete: <T>(url: string): Promise<T> =>
+            api(url, {
+                method: 'DELETE',
+            }),
+    };
 
     // Expose to useNuxtApp().$api
     return {

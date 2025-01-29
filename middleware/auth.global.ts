@@ -29,8 +29,10 @@ export default defineNuxtRouteMiddleware(async (to) => {
                     companyProfileId.value = cpId
                 }
             }
-        }  catch(err){
-
+        }  catch(err) {
+            token.value = null;
+            cookieUser.value = null;
+            return navigateTo('/login');
         }
 
 

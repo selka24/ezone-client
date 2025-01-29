@@ -62,7 +62,10 @@ const submittedOnce = ref(false)
 
 const initialEmployee = transformEditEmployee() || {
     company: companyId.value,
-    working_days: {}
+    working_days: {},
+    password: '12345678',
+    username: 'username',
+    role: 'employee',
 }
 if(props.editEmployee){
     selectedDays.value = employeeWorkDays;
@@ -83,6 +86,7 @@ const handleEmployeeSubmit = handleSubmit((employee) => {
         console.log('employee submit 2')
         emit('employeeSubmit', {
             ...employee,
+            username: employee.email.split('@')[0],
             working_days: Object.keys(employee.working_days).reduce((finalDays: WorkDay[], key) => {
                 const weekDay = key as keyof WorkingDays;
                 const workDay = employee.working_days[weekDay];
@@ -155,6 +159,8 @@ watch(selectedDays, (newDays) => {
           class="gap-x-5">
         <InputText name="name" class="col-span-2" :attributes="{placeholder: 'Enter staff name'}"/>
         <InputText name="lastname" class="col-span-2" :attributes="{placeholder: 'Enter staff last name'}"/>
+        <InputText name="email" class="col-span-2"  :attributes="{placeholder: 'Enter staff email'}"/>
+        <InputText name="password" class="col-span-2"  :attributes="{placeholder: 'Enter staff email', type: 'password'}"/>
         <InputText name="job_title" class="col-span-2"  :attributes="{placeholder: 'Enter job description'}"/>
         <InputSelect :options="services || []"
                      :multiple="true"

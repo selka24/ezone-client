@@ -1,18 +1,25 @@
 <script setup lang="ts">
 import InputToggle from "~/components/inputs/InputToggle.vue";
 import InputText from "~/components/inputs/InputText.vue";
-import {companyValidationSchema} from "~/validations";
+import {companyValidationSchema, mainInfoValidationSchema} from "~/validations";
 
 const companyStore = useCompanyStore();
 const editMode = ref(false);
+const {$toast} = useNuxtApp();
 
 const { handleSubmit } = useForm({
-    validationSchema: companyValidationSchema,
+    validationSchema: mainInfoValidationSchema,
     initialValues: companyStore.company
 })
 
-const updateCompany = handleSubmit((values) => {
-
+const updateCompany = handleSubmit(async(values) => {
+    const msg = await companyStore.actUpdateCompany({...values, employees: []});
+    if(msg === 'success') {
+        $toast.success('Profile updated successfully.');
+        editMode.value = false;
+    } else {
+        $toast.error('Something wrong happened!');
+    }
 })
 </script>
 

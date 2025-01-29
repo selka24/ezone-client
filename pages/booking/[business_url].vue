@@ -41,7 +41,8 @@ const {value: employee} = useField<string>('employee');
 const step = ref(0);
 const loading = ref(false);
 const confirmedReservation = ref<any>(null);
-const direction = ref('')
+const direction = ref('');
+const router = useRouter()
 
 const selEmployeeName = () => {
     if(reservationInfo.employee) {
@@ -105,7 +106,7 @@ const handleNextStep = async () => {
 }
 const handlePrevStep = async () => {
     if(step.value > 0) {
-        direction.value = '';
+        direction.value = 'down';
         step.value--
     }
 }
@@ -197,11 +198,12 @@ const handleReserve = handleSubmit((bookingInfo) => {
 const makeReservation = async (body: any) => {
     try {
         loading.value = true;
-        const data = await $api('/reserve', {
+        const data: any = await $api('/reserve', {
             method: 'POST',
             body
         })
-        confirmedReservation.value = data
+        confirmedReservation.value = data?.booking || data;
+        await router.push(`/booking/reservation/${confirmedReservation.value._id}`)
         step.value++;
     } catch (e) {
         //
@@ -255,23 +257,23 @@ const handleCancel = () => {
                         </div>
                         <div class="relative pt-7 overflow-hidden">
                             <transition :name="direction === 'up' ? 'slide-up' : 'slide-down'">
-                                <h4 :key="direction" class="font-semibold text-lg absolute top-0">{{stepInformation.title}}</h4>
+                                <h4 :key="stepInformation.title" class="font-semibold text-lg absolute top-0">{{stepInformation.title}}</h4>
                             </transition>
                         </div>
                         <div class="divider divider-neutral my-5 w-full"></div>
                     </div>
                     <div class="stepper z-[1] flex flex-col flex-1">
-                        <transition-group
-                            :name="direction === 'up' ? 'slide-up' : 'slide-down'"
-                        >
+<!--                        <transition-group-->
+<!--                            :name="direction === 'up' ? 'slide-up' : 'slide-down'"-->
+<!--                        >-->
                             <BookServiceSelect
                                 v-if="services"
                                 v-show="step === 0"
                                 name="service"
                                 :services="services"
                             />
-                            <div v-show="step === 1" class="grid grid-cols-9 justify-center">
-                                <div class="col-span-6">
+                            <div v-show="step === 1" class="grid grid-cols-12 justify-center w-full">
+                                <div class="col-span-8">
                                     <DatePicker v-model="date"
                                                 class="p-0 m-0"
                                                 :min-date="new Date()"
@@ -280,7 +282,7 @@ const handleCancel = () => {
                                                 :borderless="true"
                                                 :is-dark="true"/>
                                 </div>
-                                <div class="col-span-1 w-full flex justify-center">
+                                <div class="col-span-2 w-full flex justify-center">
                                     <div class="divider divider-horizontal divider-neutral m-0 h-full"></div>
                                 </div>
                                 <div class="col-span-2">
@@ -349,7 +351,7 @@ const handleCancel = () => {
                                     <button type="button" @click="handleCancel" class="btn btn-outline btn-error flex-1">Anullo</button>
                                 </div>
                             </div>
-                        </transition-group>
+<!--                        </transition-group>-->
                     </div>
                     <button
                         v-if="step < 4"

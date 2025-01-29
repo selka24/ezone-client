@@ -82,6 +82,8 @@ interface BaseEmployee {
     company: string
     name: string
     lastname: string
+    email: string
+    username: string
     job_title: string
     services: Service[]
 }
@@ -106,7 +108,19 @@ export interface Company extends CompanyMainInfo{
 }
 
 export interface BookingTime {
-    start_time: string,
-    end_time: string,
+    start_time: string
+    end_time: string
     availableEmpl: string[]
+}
+
+export interface ClientReservation{
+    _id: string
+    service: Service
+    employee: Employee
+    company: Company
+    name: string
+    phone: number
+    email: string
+    date: string
+    status: ReservationStatuses
 }
