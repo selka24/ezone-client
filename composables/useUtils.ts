@@ -47,10 +47,15 @@ export const useUtils = () => {
 
     }
 
+    const copyToClipboard = (text: string) => {
+        navigator.clipboard.writeText(text);
+    }
+
     return {
         parseJwt,
         addTimeToDate,
         addZero,
-        displayDuration
+        displayDuration,
+        copyToClipboard,
     }
 }

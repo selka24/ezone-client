@@ -8,7 +8,7 @@
         {title: 'My Business', icon: 'far building', route: '/admin/my-business'},
         {title: 'Portfolio', icon: 'wallet'},
         {title: 'Booking', icon: 'sheet-plastic'},
-        {title: 'Reports', icon: 'magnifying-glass-chart'},
+        {title: 'Reports', icon: 'magnifying-glass-chart', route: '/admin/reports'},
         {title: 'Settings', icon: 'gear'},
     ]
 

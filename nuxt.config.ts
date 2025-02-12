@@ -1,96 +1,103 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
-import type { NuxtPage} from 'nuxt/schema';
+import type {NuxtPage} from 'nuxt/schema';
 
 export default defineNuxtConfig({
-  devtools: { enabled: true },
-  ssr: false,
-  typescript: {
-      typeCheck: true
-  },
+    devtools: {enabled: true},
+    ssr: false,
+    typescript: {
+        typeCheck: true
+    },
 
-  hooks: {
-      'pages:extend' (pages) {
-          function setMiddleware (pages: NuxtPage[]) {
-              for (const page of pages) {
-                  if (page.path.includes('admin')) {
-                      page.meta ||= {};
-                      // Note that this will override any middleware set in `definePageMeta` in the page
-                      // page.meta.middleware = ['auth']
-                      page.meta.layout = 'authenticated';
-                  }
-                  if (page.children) {
-                      setMiddleware(page.children)
-                  }
-              }
-          }
-          setMiddleware(pages)
-      }
-  },
+    hooks: {
+        'pages:extend'(pages) {
+            function setMiddleware(pages: NuxtPage[]) {
+                for (const page of pages) {
+                    if (page.path.includes('admin')) {
+                        page.meta ||= {};
+                        // Note that this will override any middleware set in `definePageMeta` in the page
+                        // page.meta.middleware = ['auth']
+                        page.meta.layout = 'authenticated';
+                    }
+                    if (page.children) {
+                        setMiddleware(page.children)
+                    }
+                }
+            }
 
-  css: [
-      '~/assets/css/main.css',
-      '~/assets/css/transitions.css',
-  ],
+            setMiddleware(pages)
+        }
+    },
 
-  runtimeConfig: {
-      public: {
-          baseURL: process.env.NODE_ENV === 'development' ? process.env.BASE_URL_DEV : process.env.BASE_URL_PROD,
-      },
-  },
+    css: [
+        '~/assets/css/main.css',
+        '~/assets/css/transitions.css',
+    ],
 
-  imports:{
-      dirs: ['interfaces/*.ts']
-  },
+    runtimeConfig: {
+        public: {
+            baseURL: process.env.NODE_ENV === 'development' ? process.env.BASE_URL_DEV : process.env.BASE_URL_PROD,
+        },
+    },
 
-  modules: [
-      '@nuxtjs/tailwindcss',
-      '@vee-validate/nuxt',
-      '@vueuse/nuxt',
-      '@pinia/nuxt',
-      '@vesp/nuxt-fontawesome',
-  ],
+    imports: {
+        dirs: ['interfaces/*.ts']
+    },
 
-  fontawesome: {
-      component: 'fai',
-      icons: {
-          solid: [
-              'right-from-bracket',
-              'chevron-left',
-              'pencil',
-              'pen',
-              'chevron-right',
-              'house',
-              'sheet-plastic',
-              'wallet',
-              'gear',
-              'circle-xmark',
-              'plus',
-              'trash',
-              'eye',
-              'people-group',
-              'chart-simple',
-              'magnifying-glass-chart',
-              'user',
-              'xmark',
-              'check',
-          ],
-          regular: [
-              'building',
-          ]
-      }
-  },
+    modules: [
+        '@nuxtjs/tailwindcss',
+        '@vee-validate/nuxt',
+        '@vueuse/nuxt',
+        '@pinia/nuxt',
+        '@vesp/nuxt-fontawesome',
+    ],
 
-  veeValidate: {
-      // disable or enable auto imports
-      autoImports: true,
-      // Use different names for components
-      componentNames: {
-          Form: 'VeeForm',
-          Field: 'VeeField',
-          FieldArray: 'VeeFieldArray',
-          ErrorMessage: 'VeeErrorMessage',
-      },
-  },
+    fontawesome: {
+        component: 'fai',
+        icons: {
+            solid: [
+                'right-from-bracket',
+                'chevron-left',
+                'pencil',
+                'pen',
+                'chevron-right',
+                'house',
+                'sheet-plastic',
+                'wallet',
+                'gear',
+                'circle-xmark',
+                'plus',
+                'trash',
+                'eye',
+                'people-group',
+                'chart-simple',
+                'magnifying-glass-chart',
+                'user',
+                'xmark',
+                'check',
+                'copy',
+            ],
+            regular: [
+                'building',
+            ]
+        }
+    },
 
-  compatibilityDate: '2024-10-25',
+    veeValidate: {
+        // disable or enable auto imports
+        autoImports: true,
+        // Use different names for components
+        componentNames: {
+            Form: 'VeeForm',
+            Field: 'VeeField',
+            FieldArray: 'VeeFieldArray',
+            ErrorMessage: 'VeeErrorMessage',
+        },
+    },
+
+    tailwindcss: {
+        exposeConfig: true,
+        viewer: false
+    },
+
+    compatibilityDate: '2024-10-25',
 })

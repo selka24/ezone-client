@@ -3,10 +3,12 @@
     import LoaderButton from "~/components/ui/LoaderButton.vue";
     import {ReservationStatuses} from '~/interfaces/main-types'
     const {$apiService} = useNuxtApp();
+    const {copyToClipboard} = useUtils();
     const loadingId = ref<string[]>([])
 
     const authStore = useAuthStore();
     const bookingTableColumns = [
+        {title: 'ID', key: 'id'},
         {title: 'Orari', key: 'date'},
         {title: 'Klienti', key: 'name'},
         {title: 'Nr. Telefonit', key: 'phone'},
@@ -19,6 +21,20 @@
     const {data: allBookings, refresh: refreshBookings} = useAsyncData<any>('allBookings', () => $apiService.get(`bookings/company/${authStore.authUser?.companyProfileId}`))
 
     console.log(allBookings)
+
+    const statusColor = (status: string) => {
+        switch (status) {
+            case ReservationStatuses.ACCEPTED:
+                return 'success';
+            case ReservationStatuses.CANCELED_BY_COMPANY:
+            case ReservationStatuses.CANCELED_BY_CUSTOMER:
+                return 'error';
+            case ReservationStatuses.PENDING:
+                return 'warning';
+            default:
+                return 'neutral';
+        }
+    }
 
     const tableData = computed<any>(() => {
         if(allBookings.value){
@@ -72,14 +88,22 @@
             <tbody>
                 <tr v-for="data in tableData">
                     <th v-for="({key}) in bookingTableColumns" :key="`body-${data.id}-${key}`">
-                        {{data[key]}}
+                        <div :class="key === 'status' ? `badge badge-${statusColor(data.status)}` : ''">
+                            {{data[key]}}
+                        </div>
+                        <fai
+                            v-if="key === 'id'"
+                            icon="copy"
+                            class="text-sm cursor-pointer"
+                            @click="copyToClipboard(data.id)"
+                        />
                     </th>
                     <th>
                         <div class="flex gap-2 items-center justify-center">
                             <LoaderButton
                                 @click="handleStatusChange(data.id, ReservationStatuses.ACCEPTED)"
                                 :loading="loadingId.includes(`${ReservationStatuses.ACCEPTED}-${data.id}`)"
-                                :disabled="data.status === ReservationStatuses.ACCEPTED"
+                                :disabled="data.status !== ReservationStatuses.PENDING"
                                 class="btn-xs btn-success">
                                 <fai icon="check" class="mx-0.5"/>
                             </LoaderButton>
@@ -87,7 +111,7 @@
                                 class="btn-xs btn-error"
                                 @click="handleStatusChange(data.id, ReservationStatuses.CANCELED_BY_COMPANY)"
                                 :loading="loadingId.includes(`${ReservationStatuses.CANCELED_BY_COMPANY}-${data.id}`)"
-                                :disabled="data.status === ReservationStatuses.CANCELED_BY_COMPANY"
+                                :disabled="data.status !== ReservationStatuses.PENDING && data.status !== ReservationStatuses.ACCEPTED"
                             >
                                 <fai icon="xmark" class="mx-0.5"/>
                             </LoaderButton>

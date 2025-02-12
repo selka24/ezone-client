@@ -129,7 +129,7 @@ const handleApplyAll = (baseDay: Days) => {
     if(baseWorkDay){
         sortWeekDays.value.forEach((selDay) => {
             if(selDay !== baseDay){
-                setFieldValue(`working_days.${selDay}`, {...baseWorkDay})
+                setFieldValue(`working_days.${selDay}`, {...baseWorkDay, day: selDay})
             }
         })
     }
