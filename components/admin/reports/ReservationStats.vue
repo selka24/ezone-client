@@ -33,14 +33,14 @@ const {data: stats} = useAsyncData<any>(
             </div>
             <div class="stat">
                 <div class="stat-title">Avg. Reservations</div>
-                <div class="stat-value text-primary">{{ stats.averageBookingsPerDay.toFixed(1) || 'N/A' }}</div>
+                <div class="stat-value text-primary">{{ stats?.averageBookingsPerDay.toFixed(1) || 'N/A' }}</div>
                 <div class="stat-desc">
                     Numri mesatar
                 </div>
             </div>
             <div class="stat">
                 <div class="stat-title">Peak Time</div>
-                <div class="stat-value text-primary">{{stats.peakTime || 'N/A'}}</div>
+                <div class="stat-value text-primary">{{stats?.peakTime || 'N/A'}}</div>
                 <div class="stat-desc">
                     Orari me i kerkuar
                 </div>
