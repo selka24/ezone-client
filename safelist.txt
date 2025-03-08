@@ -1,0 +1,8 @@
+badge-primary
+badge-success
+badge-warning
+badge-error
+shadow-primary
+shadow-success
+shadow-warning
+shadow-error

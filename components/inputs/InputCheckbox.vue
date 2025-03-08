@@ -14,13 +14,13 @@ const { value, errorMessage } = useField(() => props.name);
 </script>
 
 <template>
-    <div class="form-control">
-        <label class="label cursor-pointer">
-            <span class="label-text capitalize">{{label || name}}</span>
+    <fieldset class="fieldset">
+        <label class="label cursor-pointer capitalize">
+            {{label || name}}
             <input type="checkbox" v-model="value" class="checkbox checkbox-primary" />
         </label>
-        <div class="label">
-            <span class="label-text-alt text-error">{{ errorMessage }}</span>
+        <div class="label text-error">
+            {{ errorMessage }}
         </div>
-    </div>
+    </fieldset>
 </template>

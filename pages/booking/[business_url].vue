@@ -286,7 +286,7 @@ const handleCancel = () => {
                                     <div class="divider divider-horizontal divider-neutral m-0 h-full"></div>
                                 </div>
                                 <div class="col-span-2">
-                                    <div class="input input-bordered flex items-center justify-center mb-4">
+                                    <div class="input flex items-center justify-center mb-4">
                                         {{ selectedTime?.start_time ? moment(selectedTime.start_time).format('HH : mm') : '00 : 00' }}
                                     </div>
                                     <div class="overflow-auto h-[240px] h-100 no-scrollbar w-full relative">

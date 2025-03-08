@@ -170,10 +170,10 @@ watch(selectedDays, (newDays) => {
                      :attributes="{placeholder: 'Select services for this staff'}"
                      name="services"/>
         <div class="flex flex-col gap-5">
-            <div class="form-control w-full">
-                <div class="label mb-3">Select working days</div>
+            <fieldset class="fieldset">
+                <label class="label mb-3">Select working days</label>
                 <WeekdayPicker v-model="selectedDays" class="justify-between"/>
-            </div>
+            </fieldset>
             <div class="grid grid-cols-1 gap-3">
                 <div class="label" v-if="errors?.working_days && submittedOnce">
                     <span class="label-text-alt text-error">{{ errors?.working_days }}</span>

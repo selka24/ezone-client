@@ -8,11 +8,11 @@
 
     const authStore = useAuthStore();
     const bookingTableColumns = [
+        {title: 'Klienti', key: 'name'},
         {title: 'ID', key: 'id'},
         {title: 'Orari', key: 'date'},
-        {title: 'Klienti', key: 'name'},
         {title: 'Nr. Telefonit', key: 'phone'},
-        {title: 'Email', key: 'email'},
+        // {title: 'Email', key: 'email'},
         {title: 'Stafi', key: 'staffName'},
         {title: 'Status', key: 'status'},
     ]
@@ -74,7 +74,7 @@
 
 <template>
     <div>
-        <table class="table">
+        <table class="table table-sm">
             <thead>
                 <tr>
                     <th v-for="({title, key}) in bookingTableColumns" :key="`head-${key}`">
@@ -88,15 +88,17 @@
             <tbody>
                 <tr v-for="data in tableData">
                     <th v-for="({key}) in bookingTableColumns" :key="`body-${data.id}-${key}`">
-                        <div :class="key === 'status' ? `badge badge-${statusColor(data.status)}` : ''">
-                            {{data[key]}}
+                        <div class="flex gap-2">
+                            <div :class="[{[`badge badge-${statusColor(data.status)} badge-xs min-w-max`]: key === 'status'}]">
+                                {{data[key]}}
+                            </div>
+                            <fai
+                                v-if="key === 'id'"
+                                icon="copy"
+                                class="text-sm cursor-pointer"
+                                @click="copyToClipboard(data.id)"
+                            />
                         </div>
-                        <fai
-                            v-if="key === 'id'"
-                            icon="copy"
-                            class="text-sm cursor-pointer"
-                            @click="copyToClipboard(data.id)"
-                        />
                     </th>
                     <th>
                         <div class="flex gap-2 items-center justify-center">

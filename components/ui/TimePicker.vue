@@ -1,12 +1,12 @@
 <template>
-    <label ref="timePicker" class="form-control w-full relative">
-        <div v-if="!noLabel" class="label">
-            <span class="label-text capitalize">{{ label || 'Duration' }}</span>
-        </div>
+    <fieldset ref="timePicker" class="fieldset relative">
+        <label v-if="!noLabel" class="label capitalize">
+            {{ label || 'Duration' }}
+        </label>
         <input :value="inputValue"
                readonly
                @click="handleToggle"
-               class="input input-bordered text-center" type="text"/>
+               class="input text-center" type="text"/>
         <div class="label" v-if="errorMessage">
             <span class="label-text-alt text-error">{{ errorMessage }}</span>
         </div>
@@ -29,7 +29,7 @@
                 </div>
             </div>
         </div>
-    </label>
+    </fieldset>
 </template>
 <script setup lang="ts">
 const emit = defineEmits(['update:modelValue']);

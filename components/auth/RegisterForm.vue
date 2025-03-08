@@ -36,11 +36,11 @@ const onSubmit = handleSubmit(values => {
         <InputText name="email" :attributes="{type: 'email', name: 'email'}" />
 <!--        <InputText name="username" :attributes="{}"/>-->
         <InputText name="password" :attributes="{type: 'password'}" />
-<!--        <label class="form-control w-full max-w-xs">-->
+<!--        <label class="fieldset max-w-xs">-->
 <!--            <div class="label">-->
 <!--                <span class="label-text">Select user role</span>-->
 <!--            </div>-->
-<!--            <select v-model="role" class="select select-bordered capitalize">-->
+<!--            <select v-model="role" class="select capitalize">-->
 <!--                <option disabled>Select Role</option>-->
 <!--                <option v-for="opt in roleOptions" class="capitalize">{{ opt }}</option>-->
 <!--            </select>-->

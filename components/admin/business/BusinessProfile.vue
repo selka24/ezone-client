@@ -60,7 +60,7 @@ const updateCompany = handleSubmit(async(values) => {
                     <div class="join w-full">
                         <input
                             :class="(!editMode ? 'input-disabled' : '')"
-                            class="input input-bordered join-item pr-0"
+                            class="input join-item pr-0"
                             value="https://ezon/booking/"
                             readonly
                         >

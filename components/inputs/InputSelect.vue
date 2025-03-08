@@ -86,13 +86,13 @@ const handleSelect = (selectedValue: any) => {
 
 </script>
 <template>
-    <div class="form-control w-full dropdown">
-        <div class="label">
-            <span class="label-text capitalize">{{ name }}</span>
-        </div>
+    <fieldset class="fieldset dropdown">
+        <label class="label capitalize">
+            {{ name }}
+        </label>
         <div role="button"
              tabindex="0"
-             class="input input-bordered flex items-end pb-3 overflow-x-auto overflow-y-hidden">
+             class="input flex items-end pb-3 overflow-x-auto overflow-y-hidden">
             {{selectModel}}
         </div>
         <ul tabindex="0" class="dropdown-content w-full top-24 z-[1] menu p-2 shadow-2xl bg-base-100 rounded-box">
@@ -102,7 +102,7 @@ const handleSelect = (selectedValue: any) => {
                 </a>
             </li>
         </ul>
-<!--        <select v-model="selectModel" class="select select-bordered capitalize" v-bind="attributes">-->
+<!--        <select v-model="selectModel" class="select capitalize" v-bind="attributes">-->
 <!--            <option disabled>Select Role</option>-->
 <!--            <option v-for="opt in options" class="capitalize" :value="opt">-->
 <!--                <slot name="option" :data="opt">-->
@@ -110,8 +110,8 @@ const handleSelect = (selectedValue: any) => {
 <!--                </slot>-->
 <!--            </option>-->
 <!--        </select>-->
-        <div class="label">
-            <span class="label-text-alt text-error">{{ errorMessage }}</span>
+        <div class="label text-error">
+            {{ errorMessage }}
         </div>
-    </div>
+    </fieldset>
 </template>

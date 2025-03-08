@@ -1,5 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 import type {NuxtPage} from 'nuxt/schema';
+import tailwindcss from "@tailwindcss/vite";
 
 export default defineNuxtConfig({
     devtools: {enabled: true},
@@ -28,6 +29,12 @@ export default defineNuxtConfig({
         }
     },
 
+    vite: {
+        plugins: [
+            tailwindcss(),
+        ],
+    },
+
     css: [
         '~/assets/css/main.css',
         '~/assets/css/transitions.css',
@@ -44,7 +51,7 @@ export default defineNuxtConfig({
     },
 
     modules: [
-        '@nuxtjs/tailwindcss',
+        // '@nuxtjs/tailwindcss',
         '@vee-validate/nuxt',
         '@vueuse/nuxt',
         '@pinia/nuxt',
@@ -94,10 +101,10 @@ export default defineNuxtConfig({
         },
     },
 
-    tailwindcss: {
-        exposeConfig: true,
-        viewer: false
-    },
+    // tailwindcss: {
+    //     exposeConfig: true,
+    //     viewer: false
+    // },
 
     compatibilityDate: '2024-10-25',
 })

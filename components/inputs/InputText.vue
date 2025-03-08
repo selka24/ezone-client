@@ -28,15 +28,16 @@ const { value, errorMessage } = useField(() => props.name);
 // })
 </script>
 <template>
-    <label class="form-control w-full">
-        <div v-if="!noFormLabel" class="label">
-            <span class="label-text capitalize">{{ name }}</span>
-        </div>
+    <fieldset class="fieldset">
+        <label v-if="!noFormLabel" :for="name" class="label capitalize">
+            {{ name }}
+        </label>
         <input v-model="value"
-               :class="['input input-bordered', {'input-disabled': attributes?.readonly}]"
+               :id="name"
+               :class="['input', {'input-disabled': attributes?.readonly}]"
                v-bind="attributes"/>
         <div class="label">
             <span class="label-text-alt text-error">{{ errorMessage }}</span>
         </div>
-    </label>
+    </fieldset>
 </template>

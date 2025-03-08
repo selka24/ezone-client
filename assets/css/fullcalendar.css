@@ -117,7 +117,7 @@ body {
 
     .fc-button-primary:disabled,
     .fc-button-primary[disabled] {
-        @apply btn btn-primary btn-disabled;
+        @apply btn btn-primary;
     }
 
     .fc-daygrid-dot-event {
