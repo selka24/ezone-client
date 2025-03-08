@@ -133,7 +133,7 @@ const handleFilterChange = (idx: number) => {
 </script>
 
 <template>
-    <ReportCard class="col-span-full lg:col-span-7">
+    <ReportCard class="col-span-full order-last xl:col-span-7">
         <template #title>Rezervimet</template>
         <template #actions>
             <div role="tablist" class="tabs tabs-boxed">
@@ -156,7 +156,7 @@ const handleFilterChange = (idx: number) => {
         />
     </ReportCard>
     <ReservationStats
-        class="col-span-full order-1 lg:order-last lg:col-span-5"
+        class="col-span-full order-1 xl:order-last xl:col-span-5"
         :time-range="formatedParams"
         :total-reservations="reservations?.results?.length || 0"
     />

@@ -19,10 +19,17 @@ const {data: stats} = useAsyncData<any>(
         watch: [timeRange],
     }
 )
+
+
+const peakTimes = computed(() => {
+    return stats.value?.peakTime?.reduce((finalString: string, stat: any) => {
+
+    }, '')
+})
 </script>
 
 <template>
-    <div>
+    <div class="flex flex-col gap-5">
         <div class="stats bg-base-300 w-full">
             <div class="stat">
                 <div class="stat-title">Total</div>
@@ -38,11 +45,16 @@ const {data: stats} = useAsyncData<any>(
                     Numri mesatar
                 </div>
             </div>
-            <div class="stat">
+        </div>
+        <div class="stats bg-base-300 w-full" v-if="stats?.peakTime">
+            <div
+                class="stat"
+                v-for="{peakTime, bookings} in stats?.peakTime"
+                :key="peakTime">
                 <div class="stat-title">Peak Time</div>
-                <div class="stat-value text-primary">{{stats?.peakTime || 'N/A'}}</div>
+                <div class="stat-value text-primary">{{peakTime || 'N/A'}}</div>
                 <div class="stat-desc">
-                    Orari me i kerkuar
+                    Numri i rezervimeve <b class="text-base">{{ bookings }}</b>
                 </div>
             </div>
         </div>
