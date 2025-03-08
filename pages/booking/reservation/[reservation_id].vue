@@ -143,6 +143,8 @@ const handleCancel = () => {
 </template>
 
 <style scoped>
+@reference "../../../assets/css/main.css";
+
 .shadow-pending-50{
     @apply shadow-warning/10;
 }

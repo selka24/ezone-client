@@ -8,7 +8,6 @@ export default defineNuxtConfig({
     typescript: {
         typeCheck: true
     },
-
     hooks: {
         'pages:extend'(pages) {
             function setMiddleware(pages: NuxtPage[]) {
@@ -28,36 +27,29 @@ export default defineNuxtConfig({
             setMiddleware(pages)
         }
     },
-
     vite: {
         plugins: [
             tailwindcss(),
         ],
     },
-
     css: [
         '~/assets/css/main.css',
         '~/assets/css/transitions.css',
     ],
-
     runtimeConfig: {
         public: {
             baseURL: process.env.NODE_ENV === 'development' ? process.env.BASE_URL_DEV : process.env.BASE_URL_PROD,
         },
     },
-
     imports: {
         dirs: ['interfaces/*.ts']
     },
-
     modules: [
-        // '@nuxtjs/tailwindcss',
         '@vee-validate/nuxt',
         '@vueuse/nuxt',
         '@pinia/nuxt',
         '@vesp/nuxt-fontawesome',
     ],
-
     fontawesome: {
         component: 'fai',
         icons: {
@@ -88,7 +80,6 @@ export default defineNuxtConfig({
             ]
         }
     },
-
     veeValidate: {
         // disable or enable auto imports
         autoImports: true,
@@ -100,11 +91,5 @@ export default defineNuxtConfig({
             ErrorMessage: 'VeeErrorMessage',
         },
     },
-
-    // tailwindcss: {
-    //     exposeConfig: true,
-    //     viewer: false
-    // },
-
     compatibilityDate: '2024-10-25',
 })
